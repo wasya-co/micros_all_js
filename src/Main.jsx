@@ -1,15 +1,39 @@
 
-import { useKeycloak } from '@react-keycloak/web'
+
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+
 import React, { Fragment as F, useEffect, useState } from 'react'
+import { useKeycloak } from '@react-keycloak/web'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 
 import {
   logg,
 } from './shared'
 
+const Home = () => {
+  logg('home')
+  return <h1>Home</h1>
+}
+const Inbox = () => {
+  return <h1>Inbox</h1>
+}
+
 const Main = (props) => {
   logg(props, 'Main')
 
   const [ cuEmail, setCuEmail ] = useState()
+  const [ drawerOpen, setDrawerOpen ] = useState(false)
 
   const [ inns, setInns ] = useState([])
   const [ analyticsToken, setAnalyticsToken ] = useState()
@@ -31,9 +55,6 @@ const Main = (props) => {
       setCuEmail(keycloak.idTokenParsed.email)
       setAnalyticsToken(keycloak.idTokenParsed.analytics_token)
     }
-        //
-
-
   }, [ initialized, keycloak ])
 
   useEffect(() => {
@@ -46,17 +67,45 @@ const Main = (props) => {
   }, [ analyticsToken ])
 
   return (<F>
+    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} >
+      <Box sx={{ width: 250 }} role="presentation">
+        <List>
+
+          <ListItem key='Inbox' disablePadding>
+            <ListItemButton href="/inbox" >
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText primary='Inbox' />
+            </ListItemButton>
+          </ListItem>
+
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Drawer>
     <h1>
       Main for {cuEmail}
     </h1>
-    { inns.map(visit => <div>
-        <h5>{visit.userId} visited on {visit.serverDate}</h5>
-        { visit.actionDetails.map(action =>
-            action.eventAction && <div>
-              {action.eventCategory}/{action.eventAction} ::&nbsp;
-              {action.eventName}
-          </div>) }
-      </div>)}
+    <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
+    <Router>
+      <Routes>
+        <Route path="/" exact element={<Home />} />
+        <Route path="/inbox" exact element={<Inbox />} />
+      </Routes>
+    </Router>
   </F>)
 }
 export default Main

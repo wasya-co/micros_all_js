@@ -15,7 +15,7 @@ import { ReactKeycloakProvider } from '@react-keycloak/web'
 // import keycloak from './keycloak'
 import {
   logg,
-} from './shared'
+} from '$shared'
 
 import './App.css'
 import Main from './Main'
@@ -26,7 +26,7 @@ import C from 'config'
  * App
 **/
 function App() {
-  logg('App')
+  // logg('App')
 
   let keycloak = new Keycloak({
     url: C.keycloak_url,

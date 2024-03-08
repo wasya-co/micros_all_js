@@ -1,6 +1,7 @@
 
-import { useKeycloak } from '@react-keycloak/web'
 import React, { Fragment as F, useEffect, useState } from 'react'
+import {Collapse} from 'react-collapse'
+import { useKeycloak } from '@react-keycloak/web'
 import {
   Button,
   TextField,
@@ -18,6 +19,7 @@ const ApiRouter = {
 const Analytics = (props) => {
   // logg(props, 'Analytics')
 
+  const [ isOpened, setIsOpened ] = useState({})
   const [ cuEmail, setCuEmail ] = useState()
   const [ beginOn, setBeginOn ] = useState('2024-03-07')
   const [ endOn, setEndOn ] = useState('2024-03-07')
@@ -41,7 +43,30 @@ const Analytics = (props) => {
     }
   }, [ initialized, keycloak ])
 
-  const doLoad = () => {
+  // Trash
+  // const loadCampaignsReport = () => {
+  //   if (!analyticsToken) return
+  //   let hash = new URLSearchParams({
+  //     expanded: 1,
+  //     filter_limit: '-1',
+  //     // flat: 1,
+  //     format: 'JSON',
+  //     idSite:   6,
+  //     method: 'Referrers.getCampaigns',
+  //     module: 'API',
+  //     period: 'range',
+  //     date:   `${beginOn},${endOn}`,
+  //     expanded: 1,
+  //     token_auth: analyticsToken,
+  //   })
+  //   fetch(`https://analytics.wasya.co/index.php?${hash.toString()}`).then(r => r.json()).then(data => {
+  //     logg(data, 'data')
+  //     data.map((campaign) => {
+  //     })
+  //   })
+  // }
+
+  const loadLeadsReport = () => {
     if (!analyticsToken) return
 
     let hash = new URLSearchParams({
@@ -56,53 +81,96 @@ const Analytics = (props) => {
       filter_limit: '-1',
     })
 
-    const _data = {}
-    const _userIds = []
-    fetch(`https://analytics.wasya.co/index.php?${hash.toString()}`).then(r => r.json()).then(data => {
-      // logg(data, 'data')
+    const days = {}
+    const userIds = []
+    fetch(`https://analytics.wasya.co/index.php?${hash.toString()}`).then(r => r.json()).then(_data => {
+      logg(_data, 'data')
 
-      data.map((action) => {
+      _data.map((action) => {
+        if (action.referrerName == "") {
+          action.referrerName = null
+        }
+        const referrerName = action.referrerName
         const userId = action.userId
         if (userId) {
-          _userIds.push(userId)
+          userIds.push(userId)
         }
+
         action.actionDetails.map((d) => {
           const date = new Date(d.timestamp*1000).toISOString().substr(0,10)
-          if (!_data[date])              _data[date] = {}
-          if (!_data[date][userId])      _data[date][userId] = []
+          if (!days[date]) {
+            days[date] = {
+              campaigns: {},
+              users: {},
+            }
+          }
+          if (!days[date].users[userId]) {
+            days[date].users[userId] = []
+          }
+          if (!days[date].campaigns[referrerName]) {
+            days[date].campaigns[referrerName] = { users: {} }
+          }
+          if (!days[date].campaigns[referrerName].users[userId]) {
+            days[date].campaigns[referrerName].users[userId] = []
+          }
 
-          _data[date][userId].push({
+          /* by-user */
+          days[date].users[userId].push({
             dateTime: new Date(d.timestamp*1000),
             url: d.url,
           })
+
+          /* by-referrer */
+          days[date].campaigns[referrerName].users[userId].push({
+            dateTime: new Date(d.timestamp*1000),
+            url: d.url,
+          })
+
         })
       })
-      // logg(_data, '_data')
+      // logg(days, 'days')
 
       const hash2 = new URLSearchParams({
         jwt_token: jwtToken,
-        lead_ids: _userIds.join(','),
+        lead_ids: userIds.join(','),
       })
       fetch(ApiRouter.leadsIndexHashPath(hash2)).then(r => r.json()).then(users => {
         // logg(users, 'users')
 
-        const days = []
-        for (let [date, _day] of Object.entries(_data)) {
-          const day = { date: date, users: [] }
-          for (let [userId, _user] of Object.entries(_day)) {
-            // logg(userId, 'userId')
+        const days_ = []
+        for (let [date, _day] of Object.entries(days)) {
+          const day = { date: date, campaigns: [], users: [] }
 
+          for (let [referrerName, _campaign] of Object.entries(_day.campaigns)) {
+            const campaign = { referrerName: referrerName, users: [] }
+            logg(_campaign, '_campaign')
+
+            if (_campaign.users) {
+              for (let [userId, _user] of Object.entries(_campaign.users)) {
+                const user = { userId: userId, visits: _user }
+                if (userId && userId !== 'null') {
+                  user.email = users[userId].email
+                }
+                campaign.users.push(user)
+              }
+            }
+
+            day.campaigns.push(campaign)
+          }
+
+          for (let [userId, _user] of Object.entries(_day.users)) {
             const user = { userId: userId, visits: _user }
             if (userId && userId !== 'null') {
               user.email = users[userId].email
             }
             day.users.push(user)
           }
-          days.push(day)
-        }
-        // logg(days, 'days')
 
-        setData(days)
+          days_.push(day)
+        }
+        logg(days_, 'days_')
+
+        setData(days_)
       })
     })
   }
@@ -111,27 +179,65 @@ const Analytics = (props) => {
 
     <TextField label="Begin" value={beginOn} onChange={(ev) => setBeginOn(ev.target.value)} />
     <TextField label="End"   value={endOn}   onChange={(ev) => setEndOn(ev.target.value)} />
-    <Button variant="outlined" onClick={doLoad} >Go</Button>
+    <Button variant="outlined" onClick={loadLeadsReport} >Leads</Button>
+    {/* <Button variant="outlined" onClick={loadCampaignsReport} >Campaigns</Button> */}
 
     <ul>
       {data.map((day) => <F>
         <li>
-          <b>{day.date.toString()}</b>
-          <ul>
-            {day.users.map((user) => <F>
-              <li>
-                <b>{user.userId} - {user.email}</b>
-                <ul>
-                  {user.visits.map((visit) => <F>
-                    <li>
-                      {/* <b>{`${visit.dateTime}`}</b><br /> */}
-                      {visit.url}
-                    </li>
-                  </F>)}
-                </ul>
-              </li>
-            </F>)}
-          </ul>
+          <b onClick={() => {
+            isOpened[`d-${day.date.toString()}`] = !isOpened[`d-${day.date.toString()}`]
+            setIsOpened({ ...isOpened })
+          } } >{day.date.toString()}</b>
+          <Collapse isOpened={isOpened[`d-${day.date.toString()}`]} >
+            <h4>Campaigns</h4>
+            <ul>
+              {day.campaigns.map((campaign) => <F>
+                <li>
+                  <b onClick={() => {
+                    isOpened[`c-${campaign.referrerName}`] = !isOpened[`c-${campaign.referrerName}`]
+                    setIsOpened({ ...isOpened })
+                  } } >{campaign.referrerName} ({campaign.users.length})</b>
+                  <Collapse isOpened={isOpened[`c-${campaign.referrerName}`]} ><ul>
+                    {campaign.users.map((user) => <F>
+                      <li>
+                        <b onClick={() => {
+                          isOpened[`c-u-${user.userId}`] = !isOpened[`c-u-${user.userId}`]
+                          setIsOpened({ ...isOpened })
+                        } }>{user.userId} - {user.email} ({user.visits.length})</b>
+                        <Collapse isOpened={isOpened[`c-u-${user.userId}`]} ><ul>
+                          {user.visits.map((visit) => <F>
+                            <li>
+                              {visit.url}
+                            </li>
+                          </F>)}
+                          </ul></Collapse>
+                      </li>
+                    </F>)}
+                  </ul></Collapse>
+                </li>
+              </F>)}
+            </ul>
+
+            <h4>Users</h4>
+            <ul>
+              {day.users.map((user) => <F>
+                <li>
+                  <b onClick={() => {
+                    isOpened[`u-${user.userId}`] = !isOpened[`u-${user.userId}`]
+                    setIsOpened({ ...isOpened })
+                  } }>{user.userId} - {user.email} ({user.visits.length})</b>
+                  <Collapse isOpened={isOpened[`u-${user.userId}`]} ><ul>
+                    {user.visits.map((visit) => <F>
+                      <li>
+                        {visit.url}
+                      </li>
+                    </F>)}
+                  </ul></Collapse>
+                </li>
+              </F>)}
+            </ul>
+          </Collapse>
         </li>
       </F>)}
     </ul>

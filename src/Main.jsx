@@ -19,8 +19,11 @@ import { useKeycloak } from '@react-keycloak/web'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
-import Inbox from './pages/Inbox'
-import Trading from './pages/Trading'
+import {
+  Analytics,
+  Inbox,
+  Trading,
+} from './pages'
 import {
   logg,
 } from '$shared'
@@ -40,9 +43,7 @@ const Main = (props) => {
   const [ analyticsToken, setAnalyticsToken ] = useState()
 
   const { keycloak, initialized } = useKeycloak()
-
-  // logg(keycloak, 'keycloak')
-  /* keycloak.token */
+  logg(keycloak, 'keycloak')
 
   useEffect(() => {
     if (initialized) {
@@ -69,6 +70,14 @@ const Main = (props) => {
               <ListItemText primary='Inbox' />
             </ListItemButton>
           </ListItem>
+          <ListItem key='Analytics' disablePadding>
+            <ListItemButton href="/analytics" >
+              <ListItemIcon>
+                <LinkIcon />
+              </ListItemIcon>
+              <ListItemText primary='Analytics' />
+            </ListItemButton>
+          </ListItem>
           <ListItem key='Trading' disablePadding>
             <ListItemButton href="/trading" >
               <ListItemIcon>
@@ -92,6 +101,7 @@ const Main = (props) => {
     <Router>
       <Routes>
         <Route path="/" exact element={<Home />} />
+        <Route path="/analytics" exact element={<Analytics />} />
         <Route path="/inbox" exact element={<Inbox />} />
         <Route path="/trading" exact element={<Trading />} />
       </Routes>

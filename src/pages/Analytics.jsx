@@ -1,4 +1,5 @@
 
+import moment from 'moment'
 import React, { Fragment as F, useEffect, useState } from 'react'
 import {Collapse} from 'react-collapse'
 import { useKeycloak } from '@react-keycloak/web'
@@ -21,8 +22,8 @@ const Analytics = (props) => {
 
   const [ isOpened, setIsOpened ] = useState({})
   const [ cuEmail, setCuEmail ] = useState()
-  const [ beginOn, setBeginOn ] = useState('2024-03-07')
-  const [ endOn, setEndOn ] = useState('2024-03-07')
+  const [ beginOn, setBeginOn ] = useState(moment().format('YYYY-MM-DD'))
+  const [ endOn, setEndOn ] = useState(moment().format('YYYY-MM-DD'))
   const [ analyticsToken, setAnalyticsToken ] = useState()
   const [ jwtToken, setJwtToken ] = useState()
   const [ data, setData ] = useState([])

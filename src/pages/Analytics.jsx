@@ -4,14 +4,31 @@ import React, { Fragment as F, useEffect, useState } from 'react'
 import {Collapse} from 'react-collapse'
 import { useKeycloak } from '@react-keycloak/web'
 import {
+  Autocomplete,
   Button,
+  MenuItem,
+  OutlinedInput,
+  Select,
   TextField,
 } from '@mui/material';
+
 
 import config from 'config'
 import {
   logg,
 } from '$shared'
+
+const sitesArr = [
+  { siteId: 7, label: 'DemmiTV' },
+
+  { siteId: 3, label: 'piousbox.com Wordpress' },
+  { siteId: 8, label: 'piousbox.com Drupal' },
+
+  { siteId: 5, label: 'Infinite Shelter' },
+
+  { siteId: 2, label: 'wasya.co Wordpress' },
+  { siteId: 6, label: 'wasya.co Drupal' },
+]
 
 const ApiRouter = {
   leadsIndexHashPath: (hash) => `${config.apiOrigin}/wco/api/leads/index_hash.json?${hash.toString()}`,
@@ -22,8 +39,11 @@ const Analytics = (props) => {
 
   const [ isOpened, setIsOpened ] = useState({})
   const [ cuEmail, setCuEmail ] = useState()
+
+  const [ selectedSiteIds, setSelectedSiteIds ]   = useState([])
   const [ beginOn, setBeginOn ] = useState(moment().format('YYYY-MM-DD'))
-  const [ endOn, setEndOn ] = useState(moment().format('YYYY-MM-DD'))
+  const [ endOn, setEndOn ]     = useState(moment().format('YYYY-MM-DD'))
+
   const [ analyticsToken, setAnalyticsToken ] = useState()
   const [ jwtToken, setJwtToken ] = useState()
   const [ data, setData ] = useState([])
@@ -31,6 +51,7 @@ const Analytics = (props) => {
   const { keycloak, initialized } = useKeycloak()
   logg(keycloak, 'keycloak')
 
+  /* keycloak */
   useEffect(() => {
     if (initialized) {
       if (!keycloak.idTokenParsed) {
@@ -44,34 +65,11 @@ const Analytics = (props) => {
     }
   }, [ initialized, keycloak ])
 
-  // Trash
-  // const loadCampaignsReport = () => {
-  //   if (!analyticsToken) return
-  //   let hash = new URLSearchParams({
-  //     expanded: 1,
-  //     filter_limit: '-1',
-  //     // flat: 1,
-  //     format: 'JSON',
-  //     idSite:   6,
-  //     method: 'Referrers.getCampaigns',
-  //     module: 'API',
-  //     period: 'range',
-  //     date:   `${beginOn},${endOn}`,
-  //     expanded: 1,
-  //     token_auth: analyticsToken,
-  //   })
-  //   fetch(`https://analytics.wasya.co/index.php?${hash.toString()}`).then(r => r.json()).then(data => {
-  //     logg(data, 'data')
-  //     data.map((campaign) => {
-  //     })
-  //   })
-  // }
-
   const loadLeadsReport = () => {
     if (!analyticsToken) return
 
-    let hash = new URLSearchParams({
-      idSite:   6,
+    let hash = {
+      idSite:   selectedSiteIds.join(','),
       expanded: 1,
       token_auth: analyticsToken,
       module: 'API',
@@ -80,11 +78,12 @@ const Analytics = (props) => {
       date:   `${beginOn},${endOn}`,
       method: 'Live.getLastVisitsDetails',
       filter_limit: '-1',
-    })
+    }
+    logg(hash, 'hash')
 
     const days = {}
     const userIds = []
-    fetch(`https://analytics.wasya.co/index.php?${hash.toString()}`).then(r => r.json()).then(_data => {
+    fetch(`https://analytics.wasya.co/index.php?${new URLSearchParams(hash).toString()}`).then(r => r.json()).then(_data => {
       logg(_data, 'data')
 
       _data.map((action) => {
@@ -177,10 +176,24 @@ const Analytics = (props) => {
   }
 
   return <F>
-
-    <TextField label="Begin" value={beginOn} onChange={(ev) => setBeginOn(ev.target.value)} />
-    <TextField label="End"   value={endOn}   onChange={(ev) => setEndOn(ev.target.value)} />
-    <Button variant="outlined" onClick={loadLeadsReport} >Leads</Button>
+    <div className='d-flex'>
+      <Select multiple className='w-300'
+        input={<OutlinedInput label="SiteIds" />}
+        onChange={({ target: { value } }) => {
+          setSelectedSiteIds(
+            typeof value === 'string' ? value.split(',') : value
+          )
+        } }
+        value={selectedSiteIds}
+      >
+        { sitesArr.map((site) =>
+          <MenuItem key={site.sideId} value={site.siteId} >{site.label}</MenuItem>
+        ) }
+      </Select>
+      <TextField label="Begin" value={beginOn} onChange={(ev) => setBeginOn(ev.target.value)} />
+      <TextField label="End"   value={endOn}   onChange={(ev) => setEndOn(ev.target.value)} />
+      <Button variant="outlined" onClick={loadLeadsReport} >Leads</Button>
+    </div>
     {/* <Button variant="outlined" onClick={loadCampaignsReport} >Campaigns</Button> */}
 
     <ul>

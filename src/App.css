@@ -3,6 +3,13 @@
   /* text-align: center; */
 }
 
+.d-flex {
+  display: flex;
+}
+
+.w-300 {
+  width: 300px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

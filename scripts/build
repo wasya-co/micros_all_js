@@ -1,7 +1,13 @@
 #!/bin/bash
 
+set -ex
+
+yarn run build
+
 git add .
 git commit -m 'autocommit'
 git push
+
+ssh do2 "cd /opt/projects/micros_all_js && git pull"
 
 echo ok

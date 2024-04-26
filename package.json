@@ -161,7 +161,7 @@
   },
   "scripts": {
     "start": "NODE_PATH=.:./config/environments/development node scripts/start.js",
-    "build": "NODE_PATH=.:./config/environments/production node scripts/build.js",
+    "build": "PUBLIC_URL=/ NODE_PATH=.:./config/environments/production node scripts/build.js",
     "test": "node scripts/test.js"
   },
   "devDependencies": {

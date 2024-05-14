@@ -1,22 +1,21 @@
 
-
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import Box from '@mui/material/Box'
+import Drawer from '@mui/material/Drawer'
+import Button from '@mui/material/Button'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import InboxIcon from '@mui/icons-material/MoveToInbox'
 import LinkIcon from '@mui/icons-material/Link'
 import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
 
-import React, { Fragment as F, useEffect, useState } from 'react'
+import React, { Fragment as F, useEffect, useLayoutEffect, useState } from 'react'
 import { useKeycloak } from '@react-keycloak/web'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 
 import {
@@ -25,8 +24,12 @@ import {
   Trading,
 } from './pages'
 import {
+  apiRouter,
+  appRouter,
   logg,
 } from '$shared'
+
+import './main.scss'
 
 const Home = () => {
   // logg('home')
@@ -34,7 +37,7 @@ const Home = () => {
 }
 
 const Main = (props) => {
-  // logg(props, 'Main')
+  logg(props, 'Main')
 
   const [ cuEmail, setCuEmail ] = useState()
   const [ drawerOpen, setDrawerOpen ] = useState(false)
@@ -43,9 +46,9 @@ const Main = (props) => {
   const [ analyticsToken, setAnalyticsToken ] = useState()
 
   const { keycloak, initialized } = useKeycloak()
-  logg(keycloak, 'keycloak')
+  logg(useKeycloak(), 'useKeycloak')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (initialized) {
       if (!keycloak.idTokenParsed) {
         keycloak.login()
@@ -55,7 +58,7 @@ const Main = (props) => {
       setCuEmail(keycloak.idTokenParsed.email)
       setAnalyticsToken(keycloak.idTokenParsed.analytics_token)
     }
-  }, [ initialized, keycloak ])
+  }, [ initialized ])
 
   return (<F>
     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} >
@@ -63,7 +66,7 @@ const Main = (props) => {
         <List>
 
           <ListItem key='Inbox' disablePadding>
-            <ListItemButton href="/inbox" >
+            <ListItemButton href={appRouter.emailInboxPath()} >
               <ListItemIcon>
                 <MailIcon />
               </ListItemIcon>
@@ -102,7 +105,7 @@ const Main = (props) => {
       <Routes>
         <Route path="/" exact element={<Home />} />
         <Route path="/analytics" exact element={<Analytics />} />
-        <Route path="/inbox" exact element={<Inbox />} />
+        <Route path={appRouter.emailInboxPath()} exact element={<Inbox />} />
         <Route path="/trading" exact element={<Trading />} />
       </Routes>
     </Router>

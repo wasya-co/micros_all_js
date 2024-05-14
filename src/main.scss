@@ -1,0 +1,560 @@
+
+
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) center / cover no-repeat fixed;
+
+  background: url('https://d15g8hc4183yn4.cloudfront.net/wp-content/uploads/2024/04/08190544/presentation-slide-background.jpg') center center ;
+  background-size: cover;
+
+  overflow: auto;
+}
+
+
+/* A */
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App {
+  height: 100%;
+  .MuiCard-root {
+    border-radius: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.a-tab {
+
+  @keyframes a-tab-hide {
+    from {
+      height: 500px;
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes a-tab-show {
+    from {
+      height: 0px;
+      opacity: 0;
+    }
+    to {
+      height: 500px;
+      opacity: 1;
+    }
+  }
+
+  animation-duration: 1s;
+  animation-delay: -0.2s;
+  animation-timing-function: ease-in-out;
+
+
+  &.hide {
+    overflow: hidden;
+    height: 0;
+    animation-name: a-tab-hide;
+  }
+
+  &.show {
+    // display: inherit;
+    // height: inherit;
+    animation-name: a-tab-show;
+  }
+}
+
+.tab-results {
+  width: 1000px;
+  margin: auto;
+}
+
+/* B */
+
+
+.BanksIndexTable {
+  width: 100%;
+}
+
+.BanksSearch {
+  .Header {
+    // background: rgba(0,0,0, 0.25);
+
+    display: flex;
+    align-items: center;
+
+    > * {
+      margin-right: 1rem;
+    }
+
+  }
+}
+
+div.bordered {
+  border: 1px solid gray;
+}
+
+.checkboxes-scrollbox {
+  // min-width: 300px;
+
+  .label {
+    background: #ccc;
+    padding: 0.5em;
+  }
+
+  .items {
+    margin-left: 2em;
+
+    height: 200px;
+    overflow-y: scroll;
+  }
+}
+
+table.bordered {
+  border: 1px solid black;
+
+  td {
+    border: 1px solid gray;
+    padding: 0.5em;
+  }
+
+  thead {
+    background: #ccc;
+    font-weight: bold;
+  }
+
+}
+
+.Btn {
+  padding: 0.5em 1em;
+  background: #ccc;
+  border-radius: 0.5em ;
+
+  &.primary {
+    background: #99e;
+  }
+}
+
+.b-game-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-bottom: 150%;
+  perspective: 1000px;
+}
+.b-game-card__cover {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background-size: cover;
+
+}
+.b-game-card__cover::after {
+  display: block;
+  content: "";
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background: linear-gradient(226deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.4) 35%, rgba(255, 255, 255, 0.2) 42%, rgba(255, 255, 255, 0) 60%);
+  transform: translateY(-20%);
+  will-change: transform;
+  transition: transform 0.65s cubic-bezier(0.18, 0.9, 0.58, 1);
+}
+
+.b-game-card::before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 12px 12px rgba(0, 0, 0, 0.4);
+  will-change: opacity;
+  transform-origin: top center;
+  transform: skewX(0.001deg);
+  transition: transform 0.35s ease-in-out, opacity 0.5s ease-in-out;
+}
+.b-game-card:hover::before {
+  opacity: 0.6;
+  transform: rotateX(7deg) translateY(-6px) scale(1.05);
+}
+
+/* C */
+
+.Card.inactive {
+  color: #666;
+  background: #ccc;
+}
+.Card.inactive:hover {
+  transform: none;
+}
+
+.card-link {
+  text-decoration: none;
+}
+.Card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 200px;
+  padding: 35px;
+
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 20px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+
+
+  text-align: center;
+
+  min-width: 210px;
+}
+.Card {
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  transform-origin: top center;
+  will-change: transform;
+  transform: skewX(0.001deg);
+  transition: transform 0.35s ease-in-out;
+
+  &:hover {
+    transform: rotateX(7deg) translateY(-6px);
+
+    .CardC::after {
+      transform: translateY(0%);
+    }
+  }
+
+  .CardC {
+    background-size: cover;
+    perspective-origin: 50% 50%;
+    transform-style: preserve-3d;
+    transform-origin: top center;
+    will-change: transform;
+    transform: skewX(.001deg);
+    transition: transform .35s ease-in-out;
+
+
+  }
+}
+
+.center {
+  text-align: center;
+}
+
+/* D */
+
+.d-flex {
+  display: flex;
+}
+
+
+.inverse-show {
+  .show {
+    display: none;
+  }
+  .hide {
+    display: inherit;
+  }
+}
+
+/* G */
+
+.Glassmorphism {
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(15px);
+}
+
+/* L */
+
+.LayoutScreen {
+  padding-top: 1em;
+  margin: 1em;
+
+  .d-flex {
+    margin-bottom: 2em;
+
+    .Card {
+      margin-right: 2em;
+    }
+  }
+}
+
+/* M */
+
+.MainW {
+  display: flex;
+  height: 100%;
+}
+
+.Main {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.MainC {
+  margin: 1em;
+}
+
+.MainHeader {
+  background: rgba(0,0,0, 0.3);
+
+  height: 50px;
+
+  line-height: 50px;
+
+  padding-left: 0.5em;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.min-width-200px {
+  min-width: 200px;
+}
+
+.min-width-300px {
+  min-width: 300px;
+}
+
+.min-width-500px {
+  min-width: 500px;
+}
+
+.maxwidth {
+  width: 1000px;
+  margin: auto;
+}
+
+.MuiAppBar-root {
+  border-radius: 1rem;
+}
+
+/* P */
+
+.Pin {
+  img {
+    height: 24px;
+  }
+}
+
+
+/* R */
+
+#root {
+  height: 100%;
+}
+
+/* S */
+
+.select2 {
+  // min-width: 300px;
+}
+
+label.select2-label {
+  /* border: 1px solid red; */
+
+  height: 3.5em;
+  line-height: 3.5em;
+  margin: 0 1em;
+}
+
+
+.Sidebar {
+  background: rgba(0,0,0, 0.2);
+
+  flex-shrink: 0;
+
+  width: 48px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  header {
+    // border: 1px solid red;
+    height: 50px;
+    line-height: 50px;
+
+    display: flex;
+    align-items: center;
+    padding: 0 0.5em;
+
+    justify-content: space-between;
+  }
+
+
+  .logo {
+    display: none;
+  }
+
+  > ul {
+    display: none;
+  }
+
+  @keyframes collapse {
+    from {
+      width: 200px;
+    }
+    to {
+      width: 48px;
+    }
+  }
+
+  @keyframes expand {
+    from {
+      width: 48px;
+    }
+    to {
+      widfth: 200px;
+    }
+  }
+
+  animation-duration: 0.6s;
+  animation-delay: -0.2s;
+  animation-timing-function: ease-in-out;
+
+  &.is-closed {
+    animation-name: collapse;
+
+    .LogoW {
+      display: none;
+    }
+
+  }
+  &.is-open {
+    animation-name: expand;
+
+    width: 200px;
+
+    ul {
+      list-style-type: none;
+
+      li {
+        padding-top: 0.5em;
+        // padding-bottom: 0.5em;
+      }
+    }
+    > ul {
+      background: rgba(0,0,0, 0.2);
+      background: rgba(255,255,255, 0.2);
+
+      display: inherit;
+
+      margin-left: 0;
+
+      padding: 0;
+      // padding-left: 0;
+      // padding: 0.5em;
+
+      > li {
+        border-top: 2px solid #999;
+
+
+
+        .label {
+          display: block;
+
+          padding-left: 0.5em;
+          padding-bottom: 0.5em;
+        }
+
+
+        > ul {
+          // background: rgba(0,0,0, 0.2);
+          background: rgba(255,255,255, 0.3);
+
+          > li {
+            padding-bottom: 0.5em;
+          }
+
+        }
+
+      }
+    }
+
+    .LogoW {
+
+      img.Logo {
+      }
+
+    }
+    img.Logo {
+      height: 50px;
+    }
+
+  }
+
+}
+
+/* W */
+
+.w-300 {
+  width: 300px;
+}
+.w-500 {
+  width: 500px;
+}

@@ -9,16 +9,17 @@
 **/
 
 import Keycloak from 'keycloak-js'
-import React, { Fragment as F, useEffect, useState } from 'react'
+import React, { Fragment as F, useEffect, useLayoutEffect, useState } from 'react'
 import { ReactKeycloakProvider } from '@react-keycloak/web'
 
 // import keycloak from './keycloak'
+
 import {
   logg,
 } from '$shared'
 
-import './App.css'
-import Main from './Main'
+
+import LayoutMain from './LayoutMain'
 
 import C from 'config'
 
@@ -60,7 +61,7 @@ function App() {
     authClient={keycloak}
   >
     <div className="App">
-      <Main />
+      <LayoutMain />
     </div>
   </ReactKeycloakProvider>);
 }

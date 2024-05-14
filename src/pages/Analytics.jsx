@@ -4,35 +4,33 @@ import React, { Fragment as F, useEffect, useState } from 'react'
 import {Collapse} from 'react-collapse'
 import { useKeycloak } from '@react-keycloak/web'
 import {
-  Autocomplete,
   Button,
-  MenuItem,
-  OutlinedInput,
-  Select,
   TextField,
-} from '@mui/material';
-
+} from '@mui/material'
+import Select from 'react-select'
+import {
+  Link,
+  useParams,
+} from "react-router-dom"
 
 import config from 'config'
 import {
+  apiRouter,
   logg,
 } from '$shared'
 
-const sitesArr = [
-  { siteId: 7, label: 'DemmiTV' },
+const sitesOpts = [
+  { value: 7, label: 'DemmiTV' },
 
-  { siteId: 3, label: 'piousbox.com Wordpress' },
-  { siteId: 8, label: 'piousbox.com Drupal' },
+  { value: 3, label: 'piousbox.com Wordpress' },
+  { value: 8, label: 'piousbox.com Drupal' },
 
-  { siteId: 5, label: 'Infinite Shelter' },
+  { value: 5, label: 'Infinite Shelter' },
 
-  { siteId: 2, label: 'wasya.co Wordpress' },
-  { siteId: 6, label: 'wasya.co Drupal' },
+  { value: 2, label: 'wasya.co Wordpress' },
+  { value: 6, label: 'wasya.co Drupal' },
 ]
 
-const ApiRouter = {
-  leadsIndexHashPath: (hash) => `${config.apiOrigin}/wco/api/leads/index_hash.json?${hash.toString()}`,
-}
 
 const Analytics = (props) => {
   // logg(props, 'Analytics')
@@ -134,7 +132,7 @@ const Analytics = (props) => {
         jwt_token: jwtToken,
         lead_ids: userIds.join(','),
       })
-      fetch(ApiRouter.leadsIndexHashPath(hash2)).then(r => r.json()).then(users => {
+      fetch(apiRouter.leadsIndexHashPath(hash2)).then(r => r.json()).then(users => {
         // logg(users, 'users')
 
         const days_ = []
@@ -177,19 +175,11 @@ const Analytics = (props) => {
 
   return <F>
     <div className='d-flex'>
-      <Select multiple className='w-300'
-        input={<OutlinedInput label="SiteIds" />}
-        onChange={({ target: { value } }) => {
-          setSelectedSiteIds(
-            typeof value === 'string' ? value.split(',') : value
-          )
-        } }
-        value={selectedSiteIds}
-      >
-        { sitesArr.map((site) =>
-          <MenuItem key={site.sideId} value={site.siteId} >{site.label}</MenuItem>
-        ) }
-      </Select>
+      <Select
+        className="w-500"
+        isMulti
+        options={sitesOpts}
+      />
       <TextField label="Begin" value={beginOn} onChange={(ev) => setBeginOn(ev.target.value)} />
       <TextField label="End"   value={endOn}   onChange={(ev) => setEndOn(ev.target.value)} />
       <Button variant="outlined" onClick={loadLeadsReport} >Leads</Button>

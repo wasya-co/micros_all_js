@@ -7,17 +7,26 @@ import {
   YAxis,
   Tooltip, ResponsiveContainer,
 } from 'recharts'
-import React, { Fragment as F, useEffect, useState } from 'react'
+import React, { Fragment as F, useEffect, useLayoutEffect, useState } from 'react'
 import { useKeycloak } from '@react-keycloak/web'
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import {
+  Link,
+  useParams,
+} from "react-router-dom"
+
 
 import {
+  apiRouter,
+  appRouter,
   logg,
 } from '$shared'
 
 const Trading = (props) => {
   // logg(props, 'Trading')
+
+  const [ stocksList, setStocksList ] = useState([])
 
   const [ ticker, setTicker ] = useState('')
   const [ data, setData ] = useState([])
@@ -35,7 +44,23 @@ const Trading = (props) => {
     })
   }
 
+  useLayoutEffect(() => {
+    axios.get(apiRouter.stocksIndex()).then(r => r.json()).then((inns) => {
+      logg(inns, 'stocks')
+      setStocksList(inns)
+    })
+  }, [])
+
   return <F>
+
+    <div className='Stocks'>
+      <header>Stocks</header>
+      { stocksList.map((stock) => <div>
+        <Link to={appRouter.stocksShow({ ticker: stock.ticker }) } >{ stock.ticker }</Link>
+      </div> )}
+    </div>
+
+    <hr />
     <header>
       Ticker
       <input value={ticker} onChange={(e) => setTicker(e.target.value) } />

@@ -1,7 +1,13 @@
 
+
+import react, { createContext, useContext } from 'react'
+
 import config from 'config'
+
 import apiRouter from './apiRouter'
 import appRouter from './appRouter'
+
+const AppContext = createContext()
 
 const C = {
 
@@ -70,14 +76,14 @@ const select2Styles = {
     ...provided,
     background: '#fff',
     borderColor: '#9e9e9e',
-    minHeight: '3.5em',
-    height: '3.5em',
+    minHeight: '2em',
+    height: '2em',
     boxShadow: state.isFocused ? null : null,
   }),
 
   valueContainer: (provided, state) => ({
     ...provided,
-    height: '3.5em',
+    height: '2em',
     padding: '0 6px'
   }),
 
@@ -90,7 +96,7 @@ const select2Styles = {
   }),
   indicatorsContainer: (provided, state) => ({
     ...provided,
-    height: '3.5em',
+    height: '2em',
   }),
 };
 
@@ -98,9 +104,10 @@ const select2Styles = {
 
 
 export {
+  apiRouter,
+  AppContext,
+  appRouter,
   C,
   logg,
-  apiRouter,
-  appRouter,
   select2Styles,
 }

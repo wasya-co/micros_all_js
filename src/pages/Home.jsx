@@ -1,6 +1,9 @@
 
 import styled from '@emotion/styled'
-import React, { Fragment as F, useEffect, useState } from 'react'
+import React, {
+  Fragment as F,
+  useContext, useEffect, useState,
+} from 'react'
 import {
   Link,
 } from "react-router-dom"
@@ -13,35 +16,32 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuildingColumns, faCreditCard } from '@fortawesome/free-solid-svg-icons'
 
 import {
-  logg,
+  AppContext,
   appRouter,
+  logg,
 } from "$shared"
 
 
 library.add( faBuildingColumns, faCreditCard )
 
-const W0 = styled.div`
-  display: flex;
-  justify-content: center;
 
-  > * {
-    margin: 3em 1em;
-  }
-`;
-
-const CardContent = styled(_CardContent)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-`;
-
+/**
+ * Home
+**/
 const Home = (props) => {
+  // logg(props, 'Home')
+
+  const { setPageTitle } = useContext(AppContext)
+
+  useEffect(() => {
+    setPageTitle('Welcome home')
+  }, [])
+
   return <F>
     <div className="LayoutScreen">
     <div className="d-flex">
 
-    <Link className='card-link' to={appRouter.stocksPath()} >
+    {/* <Link className='card-link' to={appRouter.stocksPath()} >
       <div className='Card Glassmorphism' >
           <FontAwesomeIcon
             icon="fa-solid fa-building-columns"
@@ -49,9 +49,9 @@ const Home = (props) => {
           />
           <h2>Stocks</h2>
       </div>
-    </Link>
+    </Link> */}
 
-    <Link className='card-link' to="@TODO" >
+    {/* <Link className='card-link' to="@TODO" >
       <div className='Card Glassmorphism_' >
         <FontAwesomeIcon
           icon="fa-solid fa-credit-card"
@@ -59,9 +59,9 @@ const Home = (props) => {
         />
         <h2>Inbox</h2>
       </div>
-    </Link>
+    </Link> */}
 
-    <Link className='card-link' to="@TODO" >
+    {/* <Link className='card-link' to="@TODO" >
       <div className='Card Glassmorphism_' >
         <FontAwesomeIcon
           icon="fa-solid fa-credit-card"
@@ -69,7 +69,7 @@ const Home = (props) => {
         />
         <h2>Analytics</h2>
       </div>
-    </Link>
+    </Link> */}
 
     </div>
     {/* <div className="d-flex">

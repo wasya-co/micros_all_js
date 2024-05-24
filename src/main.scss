@@ -12,9 +12,11 @@ body {
   margin: 0;
   padding: 0;
 
-  background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) center / cover no-repeat fixed;
+  // background: url('https://d15g8hc4183yn4.cloudfront.net/wp-content/uploads/2024/04/08190544/presentation-slide-background.jpg') center center ;
+  // background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) center / cover no-repeat fixed;
+  background: url(https://images.unsplash.com/photo-1541140134513-85a161dc4a00?w=1000) center / cover no-repeat fixed;
 
-  background: url('https://d15g8hc4183yn4.cloudfront.net/wp-content/uploads/2024/04/08190544/presentation-slide-background.jpg') center center ;
+
   background-size: cover;
 
   overflow: auto;
@@ -41,9 +43,9 @@ body {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
+// .App-link {
+//   color: #61dafb;
+// }
 
 @keyframes App-logo-spin {
   from {
@@ -304,6 +306,15 @@ table.bordered {
   text-align: center;
 }
 
+.Chart-v1 {
+  width: 500px;
+  height: 400px;
+  border: 1px solid red;
+  border-radius: 0.5em;
+  padding: 1em;
+}
+
+
 /* D */
 
 .d-flex {
@@ -359,16 +370,18 @@ table.bordered {
 }
 
 .MainHeader {
+
   background: rgba(0,0,0, 0.3);
+  // border: 1px solid red;
 
   height: 50px;
-
-  line-height: 50px;
+  // line-height: 50px;
 
   padding-left: 0.5em;
 
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
 }
 
 .min-width-200px {
@@ -432,6 +445,11 @@ label.select2-label {
   a {
     text-decoration: none;
     color: inherit;
+    &:hover {
+      font-weight: bold;
+      background-color: rgba(255,255,255, 1);
+
+    }
   }
 
   header {
@@ -557,4 +575,26 @@ label.select2-label {
 }
 .w-500 {
   width: 500px;
+}
+
+.relative {
+  position: relative;
+}
+
+.userAccountMini {
+  border: 1px solid black;
+  background: white;
+
+  position: absolute;
+  right: 0;
+  top: 50px;
+
+  &.hide {
+    display: none;
+  }
+
+  &.show {
+    display: inline-block;
+  }
+
 }

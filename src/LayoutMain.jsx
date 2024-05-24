@@ -3,12 +3,17 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuildingColumns, faCreditCard, faMoon } from '@fortawesome/free-solid-svg-icons'
 
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Modal from 'react-bootstrap/Modal'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 
 import styled from '@emotion/styled'
-import React, { Fragment as F, useEffect, useLayoutEffect, useState } from 'react'
+import React, {
+  createContext,
+  Fragment as F,
+  useContext, useEffect, useLayoutEffect, useState,
+} from 'react'
 import { useKeycloak } from '@react-keycloak/web'
 import {
   Link,
@@ -38,8 +43,10 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 
+import config from 'config'
 
 import {
+  AppContext,
   appRouter,
   C,
   logg,
@@ -47,6 +54,7 @@ import {
 
 import {
   StocksIndex,
+  StocksShow,
 } from './components/stocks'
 
 import {
@@ -60,31 +68,39 @@ library.add( faBuildingColumns, faCreditCard, faMoon )
 
 
 const LayoutMain = (props) => {
-  logg(props, 'MainSidedrawer')
+  // logg(props, 'MainSidedrawer')
 
-  const [ cuEmail, setCuEmail ] = useState( 'HARDCODED@DO-NOT-DEPLOY' )
+  const [ cuEmail, setCuEmail ] = useState('replace-me@TODO')
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ pageTitle, setPageTitle ] = useState('micros_all_js')
 
   const { keycloak, initialized } = useKeycloak()
-  logg(useKeycloak(), 'useKeycloak')
+  // logg(useKeycloak(), 'useKeycloak')
 
-  // useLayoutEffect(() => {
-  //   if (initialized) {
-  //     if (!keycloak.idTokenParsed) {
-  //       keycloak.login()
-  //     }
-  //   }
-  //   if (keycloak.idTokenParsed) {
-  //     setCuEmail(keycloak.idTokenParsed.email)
-  //   }
-  // }, [ initialized ])
+  useLayoutEffect(() => {
+    if (!config.skip_keycloak) {
+      if (initialized) {
+        if (!keycloak.idTokenParsed) {
+          keycloak.login()
+        }
+      }
+      if (keycloak.idTokenParsed) {
+        localStorage.setItem('jwt_token', keycloak.idToken)
+        setCuEmail(keycloak.idTokenParsed.email)
+      }
+    }
+  }, [ initialized ])
+
+  const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
+
 
   if (!cuEmail) {
     return <div>.^.</div>
   }
 
+
   return <Router>
+    <AppContext.Provider value={{ pageTitle, setPageTitle, }} >
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
         <header>
@@ -140,18 +156,26 @@ const LayoutMain = (props) => {
       </div>{/* end Sidebar */}
       <div className="Main">
 
+
         <header className="MainHeader">
           <div className="left">
             { pageTitle }
           </div>
-          <div className="right">
+          <div className="right relative">
             <Switch inputProps={{ 'aria-label': 'Change Theme' }} />
             <FontAwesomeIcon
               icon="fa-solid fa-moon"
               style={{ fontSize: '1.5em', }}
             />
             &nbsp; &nbsp; &nbsp;
-            <IconButton ><AccountIcon sx={{ fontSize: '1.5em' }} /></IconButton>
+            <IconButton onClick={() => setShowUserAcctModal(!showUserAcctModal)} ><AccountIcon sx={{ fontSize: '1.5em' }} /></IconButton>
+            <div className={`userAccountMini ${showUserAcctModal ? 'show' : 'hide' }`}>
+              <div className='d-flex'>
+                { cuEmail }
+                <div className='Btn'>Logout</div>
+              </div>
+            </div>
+
           </div>
         </header>
 
@@ -159,15 +183,16 @@ const LayoutMain = (props) => {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/analytics" exact element={<Analytics />} />
-            <Route path={appRouter.emailInboxPath()} exact element={<Inbox />} />
+            <Route path={appRouter.emailInboxRoute} exact element={<Inbox />} />
             <Route path="/trading" exact element={<Trading />} />
-            <Route path={appRouter.stocksPath()} exact element={<StocksIndex />} />
+            <Route path={appRouter.stocksRoute} exact element={<StocksIndex />} />
+            <Route path={appRouter.stockRoute} exact element={<StocksShow />} />
           </Routes>
         </div>
 
       </div>{/* end MainC */}
     </div>{/* end MainW */}
-
+    </AppContext.Provider>
   </Router>
 }
 export default LayoutMain

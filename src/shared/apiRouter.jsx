@@ -12,28 +12,28 @@ const logg = (a, b="", c=null) => {
 };
 
 
-const apiRouter = {
-  wrap: function(what) {
-    return `${what}?jwt_token=${localStorage.getItem('jwt_token')}`
-  },
+const useApiRouter = (props) => {
+  const jwt_token = localStorage.getItem('jwt_token')
+  const apiOrigin = config.apiOrigin
 
-  getStock: function(props) {
-    return axios.get(this.wrap(this.stocksShowPath(props))).then(r => {
-      // logg(r, 'api getStock')
-      return r.data
-    })
-  },
-  getStocks: function() {
-    return axios.get(this.wrap(this.stocksIndexPath())).then(r => {
-      // logg(r, 'r')
-      return r.data.stocks
-    })
-  },
-  stocksIndexPath: () => `${config.apiOrigin}/trading/api/stocks.json`,
-  stocksShowPath:  ({ ticker }) => `${config.apiOrigin}/trading/api/stocks/${ticker}.json`,
+  const out = {
 
-  leadsIndexHashPath: (hash) => `${config.apiOrigin}/wco/api/leads/index_hash.json?${hash.toString()}`,
+    getStock: ({ ticker }) => {
+      return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}.json?jwt_token=${jwt_token}`
+        ).then(r => r.json()).then(r => {
+          // logg(r, 'api getStock')
+          return r.data
+        })
+    },
+    getStocks: () => {
+      return axios.get(`${apiOrigin}/trading/api/stocks.json?jwt_token=${jwt_token}`).then(r => {
+        // logg(r, 'r')
+        return r.data.stocks
+      })
+    },
 
-
+    leadsIndexHashPath: (hash) => `${apiOrigin}/wco/api/leads/index_hash.json?${hash.toString()}`,
+  }
+  return out
 }
-export default apiRouter
+export default useApiRouter

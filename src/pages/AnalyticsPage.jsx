@@ -15,7 +15,7 @@ import {
 
 import config from 'config'
 import {
-  apiRouter,
+  useApiRouter,
   logg,
 } from '$shared'
 
@@ -31,9 +31,13 @@ const sitesOpts = [
   { value: 6, label: 'wasya.co Drupal' },
 ]
 
-
+/**
+ * Analytics
+**/
 const Analytics = (props) => {
   // logg(props, 'Analytics')
+
+  const apiRouter = useApiRouter()
 
   const [ isOpened, setIsOpened ] = useState({})
   const [ cuEmail, setCuEmail ] = useState()

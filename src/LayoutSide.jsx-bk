@@ -110,7 +110,6 @@ const LayoutMain = (props) => {
               <img className='Logo' src="/assets/images/200x200-fedfis-logo-dark.png" />
             </div>
           </Link>
-
         </header>
 
         <ul>

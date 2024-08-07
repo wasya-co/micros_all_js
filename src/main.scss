@@ -396,6 +396,10 @@ table.bordered {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+
+  .left {
+    display: flex;
+  }
 }
 
 .min-width-200px {

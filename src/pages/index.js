@@ -1,12 +1,12 @@
 
-import Analytics from './Analytics'
-import Home from './Home'
-import Email from './Email'
-import Trading from './Trading'
+import AnalyticsPage from './AnalyticsPage'
+import HomePage from './HomePage'
+import EmailPage from './EmailPage'
+import TradingPage from './TradingPage'
 
 export {
-  Analytics,
-  Email,
-  Home,
-  Trading,
+  AnalyticsPage,
+  EmailPage,
+  HomePage,
+  TradingPage,
 }

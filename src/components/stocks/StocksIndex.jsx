@@ -10,8 +10,7 @@ import {
   AppCtx,
 } from '$src/App'
 import {
-
-  apiRouter,
+  useApiRouter,
   appRouter,
   logg,
 } from '$shared'
@@ -21,6 +20,8 @@ import {
 **/
 const StocksIndex = (props) => {
   logg(props, 'StocksIndex')
+
+  const apiRouter = useApiRouter()
 
   const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')

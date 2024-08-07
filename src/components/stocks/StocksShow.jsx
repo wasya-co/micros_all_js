@@ -20,7 +20,7 @@ import {
   AppCtx,
 } from '$src/App'
 import {
-  apiRouter,
+  useApiRouter,
   appRouter,
   C,
   logg,
@@ -40,7 +40,9 @@ const stocksOptions = [
 const StocksShow = (props) => {
   logg(props, 'StocksShow')
 
-  const params = useParams();
+  const apiRouter = useApiRouter()
+
+  const params = useParams()
   logg(params, 'StocksShow params')
 
   const { setPageTitle } = useContext(AppCtx)
@@ -51,7 +53,11 @@ const StocksShow = (props) => {
   useEffect(() => {
     setPageTitle(<div className='d-flex' >
       Stock&nbsp;
-      <Select className='select2' styles={select2Styles} options={stocksOptions} value={stocksOptions.filter(i=>i.value===params.ticker)} />
+      <Select className='select2'
+        styles={C.select2Styles}
+        options={stocksOptions}
+        value={stocksOptions.filter(i=>i.value===params.ticker)}
+      />
     </div>)
 
     apiRouter.getStock(params).then(x => {

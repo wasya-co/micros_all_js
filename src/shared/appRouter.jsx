@@ -3,11 +3,11 @@ const appRouter = {
   emailInboxPath: () => '/email/inbox',
   emailInboxRoute:      '/email/inbox',
 
-  stocksPath: () => '/trading/stocks',
-  stocksRoute:      '/trading/stocks',
+  stocksIndex: () => '/trading/stocks',
+  stocksIndexRoute:      '/trading/stocks',
 
-  stockPath: (stock) => `/trading/stocks/${stock.ticker}`,
-  stockRoute:           `/trading/stocks/:ticker`,
+  stocksShow: (stock) => `/trading/stocks/${stock.ticker}`,
+  stocksShowRoute:           `/trading/stocks/:ticker`,
 }
 
 export default appRouter

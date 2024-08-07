@@ -21,7 +21,7 @@ import {
   logg,
 } from '$shared'
 
-import LayoutSide from './LayoutSide'
+import LayoutMain from './LayoutMain'
 
 import C from 'config'
 
@@ -43,7 +43,7 @@ function App() {
 
   return (<ReactKeycloakProvider authClient={keycloak} >
     <div className="App">
-      <LayoutSide />
+      <LayoutMain />
     </div>
   </ReactKeycloakProvider>);
 }

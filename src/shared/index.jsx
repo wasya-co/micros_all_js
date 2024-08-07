@@ -4,9 +4,42 @@ import react, { createContext, useContext } from 'react'
 
 import config from 'config'
 
-import apiRouter from './apiRouter'
+import useApiRouter from './apiRouter'
 import appRouter from './appRouter'
 
+
+/*
+ * From: https://stackoverflow.com/questions/54218351/changing-height-of-react-select-component
+ * before C (const)
+**/
+const select2Styles = {
+  control: (provided, state) => ({
+    ...provided,
+    background: '#fff',
+    borderColor: '#9e9e9e',
+    minHeight: '2em',
+    height: '2em',
+    boxShadow: state.isFocused ? null : null,
+  }),
+
+  valueContainer: (provided, state) => ({
+    ...provided,
+    height: '2em',
+    padding: '0 6px'
+  }),
+
+  input: (provided, state) => ({
+    ...provided,
+    margin: '0px',
+  }),
+  indicatorSeparator: state => ({
+    display: 'none',
+  }),
+  indicatorsContainer: (provided, state) => ({
+    ...provided,
+    height: '2em',
+  }),
+};
 
 
 const C = {
@@ -42,6 +75,7 @@ const C = {
     multiselect_select2: 'multiselect-select2',
   },
 
+  select2Styles,
   statesList: [
     { label: 'AK', value: 'AK' },
     { label: 'AR', value: 'AR' },
@@ -56,6 +90,12 @@ const C = {
     public_no_hc: 'Public with No HC',
   },
 
+  workspaces: [
+    'analytics',
+    'email',
+    'crm',
+    'trading',
+  ],
 
 }
 
@@ -70,41 +110,12 @@ const logg = (a, b="", c=null) => {
 
 
 
-/* From: https://stackoverflow.com/questions/54218351/changing-height-of-react-select-component */
-const select2Styles = {
-  control: (provided, state) => ({
-    ...provided,
-    background: '#fff',
-    borderColor: '#9e9e9e',
-    minHeight: '2em',
-    height: '2em',
-    boxShadow: state.isFocused ? null : null,
-  }),
-
-  valueContainer: (provided, state) => ({
-    ...provided,
-    height: '2em',
-    padding: '0 6px'
-  }),
-
-  input: (provided, state) => ({
-    ...provided,
-    margin: '0px',
-  }),
-  indicatorSeparator: state => ({
-    display: 'none',
-  }),
-  indicatorsContainer: (provided, state) => ({
-    ...provided,
-    height: '2em',
-  }),
-};
 
 
 
 
 export {
-  apiRouter,
+  useApiRouter,
   appRouter,
   C,
   logg,

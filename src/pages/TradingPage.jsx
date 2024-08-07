@@ -18,13 +18,19 @@ import {
 
 
 import {
-  apiRouter,
+  C,
   appRouter,
   logg,
+  useApiRouter,
 } from '$shared'
 
-const Trading = (props) => {
-  // logg(props, 'Trading')
+/**
+ * TradingPage
+**/
+const TradingPage = (props) => {
+  // logg(props, 'TradingPage')
+
+  const apiRouter = useApiRouter()
 
   const [ stocksList, setStocksList ] = useState([])
 
@@ -45,7 +51,7 @@ const Trading = (props) => {
   }
 
   useLayoutEffect(() => {
-    axios.get(apiRouter.stocksIndex()).then(r => r.json()).then((inns) => {
+    apiRouter.getStocks().then((inns) => {
       logg(inns, 'stocks')
       setStocksList(inns)
     })
@@ -82,4 +88,4 @@ const Trading = (props) => {
 
   </F>
 }
-export default Trading
+export default TradingPage

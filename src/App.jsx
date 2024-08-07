@@ -9,7 +9,10 @@
 **/
 
 import Keycloak from 'keycloak-js'
-import React, { Fragment as F, useEffect, useLayoutEffect, useState } from 'react'
+import React, { createContext,
+  Fragment as F,
+  useEffect, useLayoutEffect, useState,
+} from 'react'
 import { ReactKeycloakProvider } from '@react-keycloak/web'
 
 // import keycloak from './keycloak'
@@ -18,9 +21,11 @@ import {
   logg,
 } from '$shared'
 
-import LayoutMain from './LayoutMain'
+import LayoutSide from './LayoutSide'
 
 import C from 'config'
+
+const AppCtx = createContext({})
 
 /**
  * App
@@ -36,33 +41,15 @@ function App() {
   })
   const [authenticated, setAuthenticated] = useState()
 
-  // trash?
-  // useEffect(() => {
-  //   const cb = async () => {
-  //     try {
-  //       const authenticated = await keycloak.init({
-  //           url: 'https://auth.wasya.co',
-  //           realm: 'wco',
-  //           clientId: 'wco',
-  //           // onLoad: 'login-required',
-  //           onLoad: 'check-sso',
-  //         });
-  //       console.log(`User is ${authenticated ? 'authenticated' : 'not authenticated'}`);
-  //       setAuthenticated(authenticated)
-  //     } catch (error) {
-  //       console.error('Failed to initialize adapter:', error);
-  //     }
-  //   }
-  //   cb()
-  // }, [ keycloak ])
-
-  return (<ReactKeycloakProvider
-    authClient={keycloak}
-  >
+  return (<ReactKeycloakProvider authClient={keycloak} >
     <div className="App">
-      <LayoutMain />
+      <LayoutSide />
     </div>
   </ReactKeycloakProvider>);
 }
 
-export default App;
+export default App
+export {
+  AppCtx
+}
+

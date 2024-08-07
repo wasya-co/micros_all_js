@@ -46,7 +46,9 @@ import Typography from '@mui/material/Typography'
 import config from 'config'
 
 import {
-  AppContext,
+  AppCtx,
+} from './App'
+import {
   appRouter,
   C,
   logg,
@@ -60,7 +62,7 @@ import {
 import {
   Analytics,
   Home,
-  Inbox,
+  Email,
   Trading,
 } from './pages'
 
@@ -93,24 +95,22 @@ const LayoutMain = (props) => {
 
   const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
 
-
-  if (!cuEmail) {
-    return <div>.^.</div>
+  const loginSchwab = () => {
+    window.location = `https://api.schwabapi.com/v1/oauth/authorize?client_id=${config.schwab_key}&redirect_uri=${config.schwab_redirect_url}`
   }
 
-
+  if (!cuEmail) { return <div>.^.</div> }
   return <Router>
-    <AppContext.Provider value={{ pageTitle, setPageTitle, }} >
+    <AppCtx.Provider value={{ pageTitle, setPageTitle, }} >
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
         <header>
           <Link to="/">
             <div className="LogoW">
               <img className='Logo' src="/assets/images/200x200-fedfis-logo-dark.png" />
-              {/* [fedfis] */}
             </div>
           </Link>
-          <MenuIcon onClick={() => setDrawerOpen(drawerOpen === C.classes.sidebarIsOpen ? C.classes.sidebarIsClosed : C.classes.sidebarIsOpen) } />
+
         </header>
 
         <ul>
@@ -156,9 +156,9 @@ const LayoutMain = (props) => {
       </div>{/* end Sidebar */}
       <div className="Main">
 
-
         <header className="MainHeader">
           <div className="left">
+            <MenuIcon onClick={() => setDrawerOpen(drawerOpen === C.classes.sidebarIsOpen ? C.classes.sidebarIsClosed : C.classes.sidebarIsOpen) } />
             { pageTitle }
           </div>
           <div className="right relative">
@@ -170,9 +170,11 @@ const LayoutMain = (props) => {
             &nbsp; &nbsp; &nbsp;
             <IconButton onClick={() => setShowUserAcctModal(!showUserAcctModal)} ><AccountIcon sx={{ fontSize: '1.5em' }} /></IconButton>
             <div className={`userAccountMini ${showUserAcctModal ? 'show' : 'hide' }`}>
-              <div className='d-flex'>
+              <div className='d-flex flex-column'>
                 { cuEmail }
+                <div>[jwt]</div>
                 <div className='Btn'>Logout</div>
+                <div className='' onClick={loginSchwab} >Login to Schwab</div>
               </div>
             </div>
 
@@ -183,7 +185,7 @@ const LayoutMain = (props) => {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/analytics" exact element={<Analytics />} />
-            <Route path={appRouter.emailInboxRoute} exact element={<Inbox />} />
+            <Route path={appRouter.emailInboxRoute} exact element={<Email />} />
             <Route path="/trading" exact element={<Trading />} />
             <Route path={appRouter.stocksRoute} exact element={<StocksIndex />} />
             <Route path={appRouter.stockRoute} exact element={<StocksShow />} />
@@ -192,7 +194,7 @@ const LayoutMain = (props) => {
 
       </div>{/* end MainC */}
     </div>{/* end MainW */}
-    </AppContext.Provider>
+    </AppCtx.Provider>
   </Router>
 }
 export default LayoutMain

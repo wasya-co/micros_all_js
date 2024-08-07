@@ -19,7 +19,7 @@ const apiRouter = {
 
   getStock: function(props) {
     return axios.get(this.wrap(this.stocksShowPath(props))).then(r => {
-      logg(r, 'api getStock')
+      // logg(r, 'api getStock')
       return r.data
     })
   },

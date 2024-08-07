@@ -1,12 +1,12 @@
 
 import Analytics from './Analytics'
 import Home from './Home'
-import Inbox from './Inbox'
+import Email from './Email'
 import Trading from './Trading'
 
 export {
   Analytics,
+  Email,
   Home,
-  Inbox,
   Trading,
 }

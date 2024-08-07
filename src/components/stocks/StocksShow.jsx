@@ -16,9 +16,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-
 import {
-  AppContext,
+  AppCtx,
+} from '$src/App'
+import {
   apiRouter,
   appRouter,
   C,
@@ -42,7 +43,7 @@ const StocksShow = (props) => {
   const params = useParams();
   logg(params, 'StocksShow params')
 
-  const { setPageTitle } = useContext(AppContext)
+  const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')
 
   const [ stock, setStock ] = useState({ datapoints: [] })

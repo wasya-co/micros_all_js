@@ -16,7 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuildingColumns, faCreditCard } from '@fortawesome/free-solid-svg-icons'
 
 import {
-  AppContext,
+  AppCtx,
+} from '$src/App'
+import {
   appRouter,
   logg,
 } from "$shared"
@@ -31,7 +33,7 @@ library.add( faBuildingColumns, faCreditCard )
 const Home = (props) => {
   // logg(props, 'Home')
 
-  const { setPageTitle } = useContext(AppContext)
+  const { setPageTitle } = useContext(AppCtx)
 
   useEffect(() => {
     setPageTitle('Welcome home')

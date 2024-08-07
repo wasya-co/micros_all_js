@@ -163,7 +163,8 @@
             "./src"
           ],
           "alias": {
-            "$shared": "./src/shared"
+            "$shared": "./src/shared",
+            "$src": "./src"
           }
         }
       ]

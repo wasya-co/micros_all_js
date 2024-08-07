@@ -7,7 +7,7 @@ import config from 'config'
 import apiRouter from './apiRouter'
 import appRouter from './appRouter'
 
-const AppContext = createContext()
+
 
 const C = {
 
@@ -105,7 +105,6 @@ const select2Styles = {
 
 export {
   apiRouter,
-  AppContext,
   appRouter,
   C,
   logg,

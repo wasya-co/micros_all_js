@@ -7,7 +7,10 @@ import { Link } from "react-router-dom"
 import { useKeycloak } from '@react-keycloak/web'
 
 import {
-  AppContext,
+  AppCtx,
+} from '$src/App'
+import {
+
   apiRouter,
   appRouter,
   logg,
@@ -19,7 +22,7 @@ import {
 const StocksIndex = (props) => {
   logg(props, 'StocksIndex')
 
-  const { setPageTitle } = useContext(AppContext)
+  const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')
 
   const [ stocksList, setStocksList ] = useState([])

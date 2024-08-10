@@ -7,6 +7,7 @@ import Select from 'react-select'
 import { Link, useParams } from "react-router-dom"
 import { useKeycloak } from '@react-keycloak/web'
 import {
+  Bar, BarChart,
   LineChart, Line,
   XAxis,
   YAxis,
@@ -43,12 +44,13 @@ const StocksShow = (props) => {
   const apiRouter = useApiRouter()
 
   const params = useParams()
-  logg(params, 'StocksShow params')
+  // logg(params, 'StocksShow params')
 
   const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')
 
   const [ stock, setStock ] = useState({ datapoints: [] })
+  const [ maxPain, setMaxPain ] = useState({})
 
   useEffect(() => {
     setPageTitle(<div className='d-flex' >
@@ -60,9 +62,14 @@ const StocksShow = (props) => {
       />
     </div>)
 
-    apiRouter.getStock(params).then(x => {
-      logg(x, 'got stock')
-      setStock(x)
+    // apiRouter.getStock(params).then(x => {
+    //   // logg(x, 'got stock')
+    //   setStock(x)
+    // })
+
+    apiRouter.getStockMaxPain(params).then(x => {
+      logg(x, 'maxPain')
+      setMaxPain(x.max_pain)
     })
 
   }, [])
@@ -93,8 +100,27 @@ const StocksShow = (props) => {
         <div>5yr</div>
         <div>all</div>
       </div>
-
     </div>
+
+    <br /><br />
+
+    { Object.keys(maxPain).map(date => <div className='Chart-v1 chart-max-pain'>
+      { date }
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={ maxPain[date].all } >
+          <CartesianGrid />
+          <XAxis dataKey="strike" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar
+            type="monotone" dataKey="value" stroke="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
+      <br /><br />
+    </div>
+    )}
+
 
 
   </F>

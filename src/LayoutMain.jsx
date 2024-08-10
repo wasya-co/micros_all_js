@@ -17,11 +17,11 @@ import React, {
 import { useKeycloak } from '@react-keycloak/web'
 import {
   Link,
+  Outlet,
   BrowserRouter as Router,
   Route,
   Routes,
-  createBrowserRouter,
-  RouterProvider,
+
 } from "react-router-dom"
 import _AppBar from '@mui/material/AppBar'
 import AccountIcon from '@mui/icons-material/Person'
@@ -55,6 +55,10 @@ import {
   logg,
 } from './shared'
 
+import {
+  StocksIndex,
+  StocksShow,
+} from './components/stocks'
 
 import {
   AnalyticsPage,
@@ -65,13 +69,18 @@ import {
 
 library.add( faBuildingColumns, faCreditCard, faMoon )
 
-
+/**
+ * LayoutMain
+**/
 const LayoutMain = (props) => {
-  // logg(props, 'MainSidedrawer')
+  // logg(props, 'LayoutMain')
 
   const [ cuEmail, setCuEmail ] = useState('replace-me@TODO')
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ pageTitle, setPageTitle ] = useState('micros_all_js')
+  const [ sidebarContent, setSidebarContent ] = useState(null)
+  const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
+
 
   const { keycloak, initialized } = useKeycloak()
   // logg(useKeycloak(), 'useKeycloak')
@@ -90,15 +99,15 @@ const LayoutMain = (props) => {
     }
   }, [ initialized ])
 
-  const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
 
-  const loginSchwab = () => {
-    window.location = `https://api.schwabapi.com/v1/oauth/authorize?client_id=${config.schwab_key}&redirect_uri=${config.schwab_redirect_url}`
-  }
 
   if (!cuEmail) { return <div>.^.</div> }
   return <Router>
-    <AppCtx.Provider value={{ pageTitle, setPageTitle, }} >
+    {/* LayoutMain */}
+    <AppCtx.Provider value={{
+      pageTitle, setPageTitle,
+      sidebarContent, setSidebarContent,
+    }} >
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
         <header>
@@ -109,6 +118,7 @@ const LayoutMain = (props) => {
           </Link>
         </header>
 
+        { sidebarContent }
       </div>{/* end Sidebar */}
       <div className="Main">
 
@@ -130,7 +140,7 @@ const LayoutMain = (props) => {
                 { cuEmail }
                 <div>[jwt]</div>
                 <div className='Btn'>Logout</div>
-                <div className='' onClick={loginSchwab} >Login to Schwab</div>
+
               </div>
             </div>
 
@@ -140,7 +150,11 @@ const LayoutMain = (props) => {
         <div className="MainC">
           <Routes>
             <Route path="/" exact element={<HomePage />} />
-            <Route path="/trading" element={<LayoutTrading />} />
+            <Route path="/trading" element={<LayoutTrading />} >
+              <Route path="" exact element={<TradingPage />} />
+              <Route path={appRouter.stocksIndexRoute} exact element={<StocksIndex />} />
+              <Route path="stocks/:ticker" exact element={<StocksShow />} />
+            </Route>
 
             {/* @TODO */}
             <Route path="/analytics" exact element={<AnalyticsPage />} />

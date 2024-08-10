@@ -71,7 +71,7 @@ const TradingPage = (props) => {
       Ticker
       <input value={ticker} onChange={(e) => setTicker(e.target.value) } />
       Period
-      <Select value={period} onChange={(e) => setPeriod(e.target.value)} >
+      <Select value={'1-mo'} onChange={(e) => setPeriod(e.target.value)} >
         <MenuItem value="1-mo">1-mo</MenuItem>
         <MenuItem value="3-mo">3-mo</MenuItem>
         <MenuItem value="1-yr">1-yr</MenuItem>

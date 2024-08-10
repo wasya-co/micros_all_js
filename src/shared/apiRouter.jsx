@@ -18,13 +18,23 @@ const useApiRouter = (props) => {
 
   const out = {
 
+    /* singular */
     getStock: ({ ticker }) => {
       return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}.json?jwt_token=${jwt_token}`
-        ).then(r => r.json()).then(r => {
+        ).then(r => {
           // logg(r, 'api getStock')
           return r.data
         })
     },
+    getStockMaxPain: ({ ticker }) => {
+      return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}/max-pain.json?jwt_token=${jwt_token}`
+        ).then(r => {
+          // logg(r, 'api getStock')
+          return r.data
+        })
+    },
+
+    /* plural */
     getStocks: () => {
       return axios.get(`${apiOrigin}/trading/api/stocks.json?jwt_token=${jwt_token}`).then(r => {
         // logg(r, 'r')

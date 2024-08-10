@@ -20,6 +20,7 @@ import { useKeycloak } from '@react-keycloak/web'
 import {
   Link,
   BrowserRouter as Router,
+  Outlet,
   Route,
   Routes,
   createBrowserRouter,
@@ -77,36 +78,42 @@ const LayoutTrading = (props) => {
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ pageTitle, setPageTitle ] = useState('micros_all_js')
 
+  const {
+    setSidebarContent,
+  } = useContext(AppCtx)
+
   const { keycloak, initialized } = useKeycloak()
   // logg(useKeycloak(), 'useKeycloak')
 
-  useLayoutEffect(() => {
-    if (!config.skip_keycloak) {
-      if (initialized) {
-        if (!keycloak.idTokenParsed) {
-          keycloak.login()
-        }
-      }
-      if (keycloak.idTokenParsed) {
-        localStorage.setItem('jwt_token', keycloak.idToken)
-        setCuEmail(keycloak.idTokenParsed.email)
-      }
-    }
-  }, [ initialized ])
+  // useLayoutEffect(() => {
+  //   if (!config.skip_keycloak) {
+  //     if (initialized) {
+  //       if (!keycloak.idTokenParsed) {
+  //         keycloak.login()
+  //       }
+  //     }
+  //     if (keycloak.idTokenParsed) {
+  //       localStorage.setItem('jwt_token', keycloak.idToken)
+  //       setCuEmail(keycloak.idTokenParsed.email)
+  //     }
+  //   }
+  // }, [ initialized ])
 
-  const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
 
   const loginSchwab = () => {
     window.location = `https://api.schwabapi.com/v1/oauth/authorize?client_id=${config.schwab_key}&redirect_uri=${config.schwab_redirect_url}`
   }
 
+  const sidebarContent = <F>
+    <div className='' onClick={loginSchwab} >Login to Schwab</div>
+  </F>
+
+  /* infinite loop?! */
+  // setSidebarContent(sidebarContent)
+
   if (!cuEmail) { return <div>.^.</div> }
-  return <div className="MainW">
-    <Routes>
-      <Route path="/" exact element={<TradingPage />} />
-      <Route path={appRouter.stocksRoute} exact element={<StocksIndex />} />
-      <Route path={appRouter.stockRoute} exact element={<StocksShow />} />
-    </Routes>
+  return <div className="Layout LayoutTrading">
+    <Outlet />
   </div>
 }
 export default LayoutTrading

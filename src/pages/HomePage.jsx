@@ -43,6 +43,13 @@ const Home = (props) => {
     <div className="LayoutScreen">
     <div className="d-flex">
 
+      Hello, home.<br />
+      <ul>
+        <li><Link to={appRouter.emailRootPath()}>email</Link></li>
+        <li><Link to="/trading">trading</Link></li>
+        <li><Link to="/hosting">hosting</Link></li>
+      </ul>
+
     {/* <Link className='card-link' to={appRouter.stocksPath()} >
       <div className='Card Glassmorphism' >
           <FontAwesomeIcon

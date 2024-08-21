@@ -18,6 +18,25 @@ const useApiRouter = (props) => {
 
   const out = {
 
+    /*
+     * email
+    **/
+    getEmailContextsSummary: () => {
+      return axios.get(`${apiOrigin}/email/api/contexts/summary.json?jwt_token=${jwt_token}`
+        ).then(r => {
+          logg(r, 'api getEmailContextsSummary')
+          return r.data
+        })
+    },
+
+    /*
+     * hosting
+    **/
+
+    /*
+     * trading
+    **/
+
     /* singular */
     getStock: ({ ticker }) => {
       return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}.json?jwt_token=${jwt_token}`

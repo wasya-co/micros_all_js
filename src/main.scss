@@ -350,6 +350,20 @@ table.bordered {
   backdrop-filter: blur(15px);
 }
 
+/* J */
+.jwt-token {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  > div {
+    // width: 1000px;
+    // height: 2em;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+  }
+}
+
 /* L */
 
 .LayoutScreen {
@@ -456,7 +470,7 @@ label.select2-label {
 
   flex-shrink: 0;
 
-  width: 0;
+  width: 10px;
 
   a {
     text-decoration: none;

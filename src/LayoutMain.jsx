@@ -60,39 +60,20 @@ library.add( faBuildingColumns, faCreditCard, faMoon )
 const LayoutMain = (props) => {
   // logg(props, 'LayoutMain')
 
-  const [ cuEmail, setCuEmail ] = useState('replace-me@TODO')
+  const {
+    cuEmail,
+    pageTitle,
+    sidebarContent,
+  } = useContext(AppCtx)
+
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
-  const [ pageTitle, setPageTitle ] = useState('micros_all_js')
-  const [ sidebarContent, setSidebarContent ] = useState(null)
+
   const [ showUserAcctModal, setShowUserAcctModal ] = useState(false)
-
-
-  const { keycloak, initialized } = useKeycloak()
-  // logg(useKeycloak(), 'useKeycloak')
-
-  useLayoutEffect(() => {
-    if (!config.skip_keycloak) {
-      if (initialized) {
-        if (!keycloak.idTokenParsed) {
-          keycloak.login()
-        }
-      }
-      if (keycloak.idTokenParsed) {
-        localStorage.setItem('jwt_token', keycloak.idToken)
-        setCuEmail(keycloak.idTokenParsed.email)
-      }
-    }
-  }, [ initialized ])
-
 
 
   if (!cuEmail) { return <div>.^.</div> }
   return <Router>
-    {/* LayoutMain */}
-    <AppCtx.Provider value={{
-      pageTitle, setPageTitle,
-      sidebarContent, setSidebarContent,
-    }} >
+
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
         <header>
@@ -123,7 +104,9 @@ const LayoutMain = (props) => {
             <div className={`userAccountMini ${showUserAcctModal ? 'show' : 'hide' }`}>
               <div className='d-flex flex-column'>
                 { cuEmail }
-                <div>[jwt]</div>
+                <div className='jwt-token'>
+                  <div>[jwt_token:{localStorage.getItem('jwt_token')}]</div>
+                </div>
                 <div className='Btn'>Logout</div>
 
               </div>
@@ -154,7 +137,6 @@ const LayoutMain = (props) => {
 
       </div>{/* end MainC */}
     </div>{/* end MainW */}
-    </AppCtx.Provider>
   </Router>
 }
 export default LayoutMain

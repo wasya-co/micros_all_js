@@ -10,6 +10,9 @@ import {
   AppCtx,
 } from '$src/App'
 import {
+  TradingCtx,
+} from '$src/LayoutTrading'
+import {
   useApiRouter,
   appRouter,
   logg,
@@ -26,29 +29,19 @@ const StocksIndex = (props) => {
   const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')
 
-  const [ stocksList, setStocksList ] = useState([])
+  const {
+    stocksList,
+  } = useContext(TradingCtx)
 
   useEffect(() => {
-    // logg('useLayoutEffect in StocksIndex')
-
     setPageTitle('Stocks')
-
-    apiRouter.getStocks().then(inns => {
-      // logg(inns, 'got stocks')
-      setStocksList(inns)
-    })
   }, [])
-
-
-
-  // const { keycloak, initialized } = useKeycloak()
-  // logg(useKeycloak(), 'useKeycloak')
 
   return <F>
     <header>
       <ul>
-        { stocksList.map((stock) => <F>
-          <Link to={appRouter.stockPath(stock)}><li>{ stock.ticker }</li></Link>
+        { stocksList.map((stock, idx) => <F key={idx} >
+          <Link to={appRouter.stocksShow(stock)}><li>{ stock.ticker }</li></Link>
         </F> )}
       </ul>
     </header>

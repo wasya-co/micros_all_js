@@ -15,7 +15,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from 'recharts'
 
 import {
   AppCtx,
@@ -27,6 +27,9 @@ import {
   logg,
   select2Styles,
 } from '$shared'
+import {
+  TradingCtx,
+} from '$src/LayoutTrading'
 
 
 const stocksOptions = [
@@ -34,6 +37,7 @@ const stocksOptions = [
   { label: 'GME',  value: 'GME' },
   { label: 'NVDA', value: 'NVDA' },
 ]
+
 
 /**
  * StocksShow
@@ -49,30 +53,33 @@ const StocksShow = (props) => {
   const { setPageTitle } = useContext(AppCtx)
   // logg(useContext(AppContext), 'appCtx')
 
+  const {
+    stocksList,
+  } = useContext(TradingCtx)
+  logg(useContext(TradingCtx), 'useContext(TradingCtx) in StocksShow')
+
   const [ stock, setStock ] = useState({ datapoints: [] })
   const [ maxPain, setMaxPain ] = useState({})
 
+  logg(stocksList, 'list')
+
   useEffect(() => {
+
     setPageTitle(<div className='d-flex' >
       Stock&nbsp;
       <Select className='select2'
         styles={C.select2Styles}
-        options={stocksOptions}
-        value={stocksOptions.filter(i=>i.value===params.ticker)}
+        options={stocksList}
+        value={stocksList.filter(i=>i.value===params.ticker)}
       />
     </div>)
 
-    // apiRouter.getStock(params).then(x => {
-    //   // logg(x, 'got stock')
-    //   setStock(x)
-    // })
-
     apiRouter.getStockMaxPain(params).then(x => {
-      logg(x, 'maxPain')
+      // logg(x, 'maxPain')
       setMaxPain(x.max_pain)
     })
 
-  }, [])
+  }, [ stocksList ])
 
   return <F>
 
@@ -104,22 +111,34 @@ const StocksShow = (props) => {
 
     <br /><br />
 
-    { Object.keys(maxPain).map(date => <div className='Chart-v1 chart-max-pain'>
-      { date }
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={ maxPain[date].all } >
-          <CartesianGrid />
-          <XAxis dataKey="strike" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar
-            type="monotone" dataKey="value" stroke="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-      <br /><br />
-    </div>
-    )}
+    <section>
+      <div className='header'>
+        <h2 className='center title'>Max Pain</h2>
+      </div>
+      { Object.keys(maxPain).map(date => <div key={date} className='row mb-5'>
+        <div className='col-md-6'>
+          <div className='Chart-v1 chart-max-pain'>
+
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={ maxPain[date].all } >
+                <CartesianGrid />
+                <XAxis dataKey="strike" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  type="monotone" dataKey="value" stroke="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+            <br /><br />
+          </div>
+        </div>
+        <div className='col-md-6'>
+          <h3>{ date }</h3>
+          Max Pain: {maxPain[date].summary.max_pain}
+        </div>
+      </div> )}
+    </section>
 
 
 

@@ -10,8 +10,7 @@ const appRouter = {
   tradingRootPath: () => '/trading',
 
   stocksIndex: () => '/trading/stocks',
-  stocksIndexRoute:      '/trading/stocks',
-
+  stocksIndexRoute:  '/trading/stocks',
   stocksShow: (stock) => `/trading/stocks/${stock.ticker}`,
   stocksShowRoute:           `/trading/stocks/:ticker`,
 

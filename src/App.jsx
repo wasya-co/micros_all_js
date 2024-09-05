@@ -40,7 +40,7 @@ const AppProvider = ({ children, ...props }) => {
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ jwtToken, setJwtToken ] = useState(null)
   const [ loading, setLoading ] = useState(false)
-  const [ pageTitle, setPageTitle ] = useState('Fedfis: Fintech Analytics')
+  const [ pageTitle, setPageTitle ] = useState('default Page Title')
   const [ params, setParams ] = useState({})
   const [ sidebarContent, setSidebarContent ] = useState(null)
 

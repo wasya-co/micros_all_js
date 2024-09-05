@@ -28,6 +28,13 @@ const useApiRouter = (props) => {
           return r.data
         })
     },
+    tagConversations: ({ tagname, }) => {
+      return axios.get(`${apiOrigin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwt_token}`
+        ).then(r => {
+          logg(r, 'api tagConversationsPath')
+          return r.data
+        })
+    },
 
     /*
      * hosting

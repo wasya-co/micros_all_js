@@ -78,38 +78,6 @@ const LayoutEmail = (props) => {
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ pageTitle, setPageTitle ] = useState('micros_all_js')
 
-  const {
-    setSidebarContent,
-  } = useContext(AppCtx)
-
-  const { keycloak, initialized } = useKeycloak()
-  // logg(useKeycloak(), 'useKeycloak')
-
-  // useLayoutEffect(() => {
-  //   if (!config.skip_keycloak) {
-  //     if (initialized) {
-  //       if (!keycloak.idTokenParsed) {
-  //         keycloak.login()
-  //       }
-  //     }
-  //     if (keycloak.idTokenParsed) {
-  //       localStorage.setItem('jwt_token', keycloak.idToken)
-  //       setCuEmail(keycloak.idTokenParsed.email)
-  //     }
-  //   }
-  // }, [ initialized ])
-
-
-  const loginSchwab = () => {
-    window.location = `https://api.schwabapi.com/v1/oauth/authorize?client_id=${config.schwab_key}&redirect_uri=${config.schwab_redirect_url}`
-  }
-
-  const sidebarContent = <F>
-    <div className='' onClick={loginSchwab} >Login to Schwab</div>
-  </F>
-
-  /* infinite loop?! */
-  // setSidebarContent(sidebarContent)
 
   if (!cuEmail) { return <div>.^.</div> }
   return <div className="Layout LayoutEmail">

@@ -37,6 +37,9 @@ import {
 
 /* components */
 import {
+  ConversationsIndex,
+} from './components/conversations'
+import {
   EmailContextsSummary,
 } from './components/email_contexts'
 
@@ -120,6 +123,7 @@ const LayoutMain = (props) => {
             <Route path="/" exact element={<HomePage />} />
             <Route path="/email" element={<LayoutEmail />} >
               <Route path="" exact element={<EmailPage />} />
+              <Route path="tags/:tagname" exact element={<ConversationsIndex />} />
               <Route path="contexts/summary" exact element={<EmailContextsSummary />} />
             </Route>
             <Route path="/trading" element={<LayoutTrading />} >

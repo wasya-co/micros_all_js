@@ -15,6 +15,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuildingColumns, faCreditCard } from '@fortawesome/free-solid-svg-icons'
 
+import SearchWidget from '$src/components/SearchWidget'
 import {
   AppCtx,
 } from '$src/App'
@@ -31,7 +32,7 @@ library.add( faBuildingColumns, faCreditCard )
  * Home
 **/
 const Home = (props) => {
-  // logg(props, 'Home')
+  logg(props, 'HomePage')
 
   const { setPageTitle } = useContext(AppCtx)
 
@@ -41,48 +42,50 @@ const Home = (props) => {
 
   return <F>
     <div className="LayoutScreen">
-    <div className="d-flex">
-
-      Hello, home.<br />
+      <p>Welcome home.</p>
       <ul>
         <li><Link to={appRouter.emailRootPath()}>email</Link></li>
         <li><Link to="/trading">trading</Link></li>
         <li><Link to="/hosting">hosting</Link></li>
       </ul>
+      <div className="d-flex">
+        <SearchWidget name="Youtube"  url={(q) => `https://www.youtube.com/results?search_query=${q}`} />
+        <SearchWidget name="CGTrader" url={(q) => `https://www.cgtrader.com/search?keywords=${q}`} />
 
-    {/* <Link className='card-link' to={appRouter.stocksPath()} >
-      <div className='Card Glassmorphism' >
-          <FontAwesomeIcon
-            icon="fa-solid fa-building-columns"
-            style={{ fontSize: '100px', }}
-          />
-          <h2>Stocks</h2>
+
+        {/* <Link className='card-link' to={appRouter.stocksIndex()} >
+          <div className='Card Glassmorphism' >
+              <FontAwesomeIcon
+                icon="fa-solid fa-building-columns"
+                style={{ fontSize: '100px', }}
+              />
+              <h2>Stocks</h2>
+          </div>
+        </Link> */}
+
+        {/* <Link className='card-link' to="@TODO" >
+          <div className='Card Glassmorphism_' >
+            <FontAwesomeIcon
+              icon="fa-solid fa-credit-card"
+              style={{ fontSize: '100px', }}
+            />
+            <h2>Inbox</h2>
+          </div>
+        </Link> */}
+
+        {/* <Link className='card-link' to="@TODO" >
+          <div className='Card Glassmorphism_' >
+            <FontAwesomeIcon
+              icon="fa-solid fa-credit-card"
+              style={{ fontSize: '100px', }}
+            />
+            <h2>Analytics</h2>
+          </div>
+        </Link> */}
+
       </div>
-    </Link> */}
 
-    {/* <Link className='card-link' to="@TODO" >
-      <div className='Card Glassmorphism_' >
-        <FontAwesomeIcon
-          icon="fa-solid fa-credit-card"
-          style={{ fontSize: '100px', }}
-        />
-        <h2>Inbox</h2>
-      </div>
-    </Link> */}
-
-    {/* <Link className='card-link' to="@TODO" >
-      <div className='Card Glassmorphism_' >
-        <FontAwesomeIcon
-          icon="fa-solid fa-credit-card"
-          style={{ fontSize: '100px', }}
-        />
-        <h2>Analytics</h2>
-      </div>
-    </Link> */}
-
-    </div>
     {/* <div className="d-flex">
-
     <Link className='card-link' to="@TODO" >
       <div className='Card Glassmorphism' >
           <FontAwesomeIcon
@@ -92,7 +95,6 @@ const Home = (props) => {
           <h2>Banks</h2>
       </div>
     </Link>
-
     <Link className='card-link' to="@TODO" >
       <div className='Card Glassmorphism_ inactive' >
         <FontAwesomeIcon
@@ -102,8 +104,8 @@ const Home = (props) => {
         <h2>Fintechs</h2>
       </div>
     </Link>
-
     </div> */}
+
     </div>
   </F>
 }

@@ -61,7 +61,7 @@ library.add( faBuildingColumns, faCreditCard, faMoon )
  * LayoutMain
 **/
 const LayoutMain = (props) => {
-  // logg(props, 'LayoutMain')
+  logg(props, 'LayoutMain')
 
   const {
     cuEmail,

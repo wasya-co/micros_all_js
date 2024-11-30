@@ -1,13 +1,36 @@
 #!/bin/bash
 
+echo ""
+echo "Usage: "
+echo "./scripts/build --host=do3 "
+echo "Default host is do3 "
+echo ""
+sleep 3
+
+export host=do3
+
 set -ex
 
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --host=*)
+      host="${1#*=}"
+      ;;
+    --arg_1=*)
+      arg_1="${1#*=}"
+      ;;
+    *)
+      printf "***************************\n"
+      printf "* Error: Invalid argument.*\n"
+      printf "***************************\n"
+      exit 1
+  esac
+  shift
+done
+
 yarn run build
+tar -czvf build.tar.gz build
 
-git add .
-git commit -m 'autocommit'
-git push
-
-ssh do2 "cd /opt/projects/micros_all_js && git pull"
-
-echo ok
+ssh $host 'mkdir -p /opt/tmp /opt/projects/micros_all_js'
+scp build.tar.gz $host:/opt/tmp/build.tar.gz
+ssh $host 'cd /opt/projects/micros_all_js ; rm -rf build ; tar -xzvf /opt/tmp/build.tar.gz ; sudo nginx -s reload'

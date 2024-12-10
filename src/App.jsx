@@ -20,7 +20,12 @@ import { ReactKeycloakProvider, useKeycloak } from '@react-keycloak/web'
 import {
   C,
   logg,
+  useApiRouter,
 } from '$shared'
+
+import {
+  EmailProvider,
+} from '$src/components/email'
 
 import LayoutMain from './LayoutMain'
 
@@ -33,6 +38,8 @@ const AppCtx = createContext({})
 **/
 const AppProvider = ({ children, ...props }) => {
 
+  const apiRouter = useApiRouter()
+
   const { keycloak, initialized } = useKeycloak()
 
   const [ actionName, setActionName ] = useState(null)
@@ -43,9 +50,13 @@ const AppProvider = ({ children, ...props }) => {
   const [ pageTitle, setPageTitle ] = useState('default Page Title')
   const [ params, setParams ] = useState({})
   const [ sidebarContent, setSidebarContent ] = useState(null)
+  const [ tagsList, setTagsList ] = useState([])
 
   useEffect(() => {
-    if (config.skip_keycloak) { return; }
+    if (config.skip_keycloak) {
+      setCuEmail('skipped-keycloak@example.com')
+      return
+    }
     if (initialized) {
       if (!keycloak.idTokenParsed) {
         keycloak.login()
@@ -60,6 +71,15 @@ const AppProvider = ({ children, ...props }) => {
     }
   }, [ initialized ])
 
+  useEffect(() => {
+    if (jwtToken) {
+      fetch(apiRouter.tagsPath({ jwtToken, })).then(r => r.json()).then(inns => {
+        logg(inns, 'got tags')
+        setTagsList(inns.tags)
+      })
+    }
+  }, [ jwtToken ])
+
   return <AppCtx.Provider value={{
     actionName, setActionName,
     cuEmail, setCuEmail,
@@ -69,6 +89,7 @@ const AppProvider = ({ children, ...props }) => {
     pageTitle, setPageTitle,
     params, setParams,
     sidebarContent, setSidebarContent,
+    tagsList, setTagsList,
   }} >
     { children }
   </AppCtx.Provider>
@@ -90,9 +111,11 @@ function App() {
 
   return (<ReactKeycloakProvider authClient={keycloak} >
     <AppProvider >
-      <div className="App">
-        <LayoutMain />
-      </div>
+      <EmailProvider >
+        <div className="App">
+          <LayoutMain />
+        </div>
+      </EmailProvider>
     </AppProvider>
   </ReactKeycloakProvider>);
 }

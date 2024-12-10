@@ -1,2 +1,4 @@
-
 0.0.0 :: 2024-02-26 :: start (keycloak already wired?)
+0.0.0 :: 2024-12-09 :: cant release yet, no version bump
+                       making cool emailFilter
+

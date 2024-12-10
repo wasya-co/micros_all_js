@@ -37,8 +37,14 @@ import {
 
 /* components */
 import {
+  EmailHomePage,
+} from './components/email'
+import {
   ConversationsIndex,
 } from './components/conversations'
+import {
+  EmailFilter,
+} from './components/email_filters'
 import {
   EmailContextsSummary,
 } from './components/email_contexts'
@@ -51,7 +57,6 @@ import {
 import {
   AnalyticsPage,
   HomePage,
-  EmailPage,
   TradingPage,
 } from './pages'
 
@@ -76,6 +81,8 @@ const LayoutMain = (props) => {
 
   if (!cuEmail) { return <div>.^.</div> }
   return <Router>
+
+    <EmailFilter />
 
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
@@ -122,7 +129,7 @@ const LayoutMain = (props) => {
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/email" element={<LayoutEmail />} >
-              <Route path="" exact element={<EmailPage />} />
+              <Route path="" exact element={<EmailHomePage />} />
               <Route path="tags/:tagname" exact element={<ConversationsIndex />} />
               <Route path="contexts/summary" exact element={<EmailContextsSummary />} />
             </Route>
@@ -134,7 +141,7 @@ const LayoutMain = (props) => {
 
             {/* @TODO */}
             <Route path="/analytics" exact element={<AnalyticsPage />} />
-            <Route path={appRouter.emailInboxRoute} exact element={<EmailPage />} />
+            <Route path={appRouter.emailInboxRoute} exact element={<EmailHomePage />} />
 
           </Routes>
         </div>

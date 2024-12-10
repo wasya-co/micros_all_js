@@ -1,5 +1,6 @@
 
 /build
+/build.tar.gz
 
 /config/environments
 !/config/environments/default.js

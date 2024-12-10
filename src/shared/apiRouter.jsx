@@ -1,40 +1,58 @@
 
 import axios from 'axios'
 
+import { useContext } from 'react'
+
 import config from 'config'
 
+import {
+  AppCtx,
+} from '$src/App'
+import {
+  logg,
+} from './'
 
-const logg = (a, b="", c=null) => {
-  if ('undefined' === typeof window) { return }
-  c = "string" === typeof c ? c : b.replace(/\W/g, "");
-  if (c.length > 0) { window[c] = a; }
-  console.log(`+++ ${b}:`, a); // eslint-disable-line no-console
-};
+// const logg = (a, b="", c=null) => {
+//   if ('undefined' === typeof window) { return }
+//   c = "string" === typeof c ? c : b.replace(/\W/g, "");
+//   if (c.length > 0) { window[c] = a; }
+//   console.log(`+++ ${b}:`, a); // eslint-disable-line no-console
+// };
 
 
 const useApiRouter = (props) => {
-  const jwt_token = localStorage.getItem('jwt_token')
-  const apiOrigin = config.apiOrigin
+
+  // const jwtToken = localStorage.getItem('jwt_token')
+  const {
+    jwtToken,
+  } = useContext(AppCtx)
+  logg(jwtToken, 'jwtToken in apiRouter')
+
+  const origin = config.apiOrigin
 
   const out = {
 
     /*
      * email
     **/
+    emailActionTemplatesPath: () => `${origin}/email/api/email_action_templates.json?jwt_token=${jwtToken}`,
+    emailFiltersPath: () => `${origin}/email/api/email_filters.json?jwt_token=${jwtToken}`,
+    emailTemplatesPath: () => `${origin}/email/api/email_templates.json?jwt_token=${jwtToken}`,
     getEmailContextsSummary: () => {
-      return axios.get(`${apiOrigin}/email/api/contexts/summary.json?jwt_token=${jwt_token}`
+      return axios.get(`${origin}/email/api/contexts/summary.json?jwt_token=${jwtToken}`
         ).then(r => {
           logg(r, 'api getEmailContextsSummary')
           return r.data
         })
     },
     tagConversations: ({ tagname, }) => {
-      return axios.get(`${apiOrigin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwt_token}`
+      return axios.get(`${origin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwtToken}`
         ).then(r => {
           logg(r, 'api tagConversationsPath')
           return r.data
         })
     },
+    tagsPath: ({ jwtToken, }) => `${origin}/wco/api/tags.json?jwt_token=${jwtToken}`,
 
     /*
      * hosting
@@ -46,14 +64,14 @@ const useApiRouter = (props) => {
 
     /* singular */
     getStock: ({ ticker }) => {
-      return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}.json?jwt_token=${jwt_token}`
+      return axios.get(`${origin}/trading/api/stocks/${ticker}.json?jwt_token=${jwtToken}`
         ).then(r => {
           // logg(r, 'api getStock')
           return r.data
         })
     },
     getStockMaxPain: ({ ticker }) => {
-      return axios.get(`${apiOrigin}/trading/api/stocks/${ticker}/max-pain.json?jwt_token=${jwt_token}`
+      return axios.get(`${origin}/trading/api/stocks/${ticker}/max-pain.json?jwt_token=${jwtToken}`
         ).then(r => {
           // logg(r, 'api getStock')
           return r.data
@@ -62,13 +80,13 @@ const useApiRouter = (props) => {
 
     /* plural */
     getStocks: () => {
-      return axios.get(`${apiOrigin}/trading/api/stocks.json?jwt_token=${jwt_token}`).then(r => {
+      return axios.get(`${origin}/trading/api/stocks.json?jwt_token=${jwtToken}`).then(r => {
         // logg(r, 'r')
         return r.data.stocks
       })
     },
 
-    leadsIndexHashPath: (hash) => `${apiOrigin}/wco/api/leads/index_hash.json?${hash.toString()}`,
+    leadsIndexHashPath: (hash) => `${origin}/wco/api/leads/index_hash.json?${hash.toString()}`,
   }
   return out
 }

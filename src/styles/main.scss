@@ -138,42 +138,8 @@ code {
 /* B */
 
 
-.BanksIndexTable {
-  width: 100%;
-}
-
-.BanksSearch {
-  .Header {
-    // background: rgba(0,0,0, 0.25);
-
-    display: flex;
-    align-items: center;
-
-    > * {
-      margin-right: 1rem;
-    }
-
-  }
-}
-
 div.bordered {
   border: 1px solid gray;
-}
-
-.checkboxes-scrollbox {
-  // min-width: 300px;
-
-  .label {
-    background: #ccc;
-    padding: 0.5em;
-  }
-
-  .items {
-    margin-left: 2em;
-
-    height: 200px;
-    overflow-y: scroll;
-  }
 }
 
 table.bordered {
@@ -191,13 +157,17 @@ table.bordered {
 
 }
 
+.btn,
 .Btn {
-  padding: 0.5em 1em;
-  background: #ccc;
+  padding: 0.2em;
+  // background-color: #ccc;
+  background-color: #eee;
   border-radius: 0.5em ;
+  border-color: #ccc;
 
   &.primary {
-    background: #99e;
+    background-color: var(--wco-primary-bg-color);
+    color: var(--wco-primary-emphasis-color);
   }
 }
 
@@ -256,6 +226,22 @@ table.bordered {
 }
 
 /* C */
+
+.checkboxes-scrollbox {
+  // min-width: 300px;
+
+  .label {
+    background: #ccc;
+    padding: 0.5em;
+  }
+
+  .items {
+    margin-left: 2em;
+
+    height: 200px;
+    overflow-y: scroll;
+  }
+}
 
 .Card.inactive {
   color: #666;
@@ -435,6 +421,10 @@ table.bordered {
   border-radius: 1rem;
 }
 
+.ml-2 {
+  margin-left: 0.5em;
+}
+
 /* P */
 
 .Pin {
@@ -453,7 +443,7 @@ table.bordered {
 /* S */
 
 .select2 {
-  // min-width: 300px;
+  min-width: 300px;
 }
 
 label.select2-label {

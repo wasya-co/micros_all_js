@@ -1,5 +1,4 @@
 
-import axios from 'axios'
 import {
   CartesianGrid,
   Legend, LineChart, Line,
@@ -44,7 +43,7 @@ const TradingPage = (props) => {
   const handleClick = (props) => {
     logg(props, 'handleClick')
     const tickerUrl = `http://email.local:3004/trading/api/stocks/GME/period/${period}.json?jwt_token=${keycloak.token}`
-    axios.get(tickerUrl).then(out => {
+    fetch.get(tickerUrl).then(out => {
       logg(out, 'data')
       setData(out.data)
     })

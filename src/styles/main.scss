@@ -442,6 +442,12 @@ table.bordered {
 
 /* S */
 
+.SearchWidget {
+  input[type='text'] {
+    margin: 0.5em 0;
+  }
+}
+
 .select2 {
   min-width: 300px;
 }

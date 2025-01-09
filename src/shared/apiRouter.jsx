@@ -1,6 +1,4 @@
 
-import axios from 'axios'
-
 import { useContext } from 'react'
 
 import config from 'config'
@@ -39,14 +37,14 @@ const useApiRouter = (props) => {
     emailFiltersPath: () => `${origin}/email/api/email_filters.json?jwt_token=${jwtToken}`,
     emailTemplatesPath: () => `${origin}/email/api/email_templates.json?jwt_token=${jwtToken}`,
     getEmailContextsSummary: () => {
-      return axios.get(`${origin}/email/api/contexts/summary.json?jwt_token=${jwtToken}`
+      return fetch.get(`${origin}/email/api/contexts/summary.json?jwt_token=${jwtToken}`
         ).then(r => {
           logg(r, 'api getEmailContextsSummary')
           return r.data
         })
     },
     tagConversations: ({ tagname, }) => {
-      return axios.get(`${origin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwtToken}`
+      return fetch.get(`${origin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwtToken}`
         ).then(r => {
           logg(r, 'api tagConversationsPath')
           return r.data
@@ -64,14 +62,14 @@ const useApiRouter = (props) => {
 
     /* singular */
     getStock: ({ ticker }) => {
-      return axios.get(`${origin}/trading/api/stocks/${ticker}.json?jwt_token=${jwtToken}`
+      return fetch.get(`${origin}/trading/api/stocks/${ticker}.json?jwt_token=${jwtToken}`
         ).then(r => {
           // logg(r, 'api getStock')
           return r.data
         })
     },
     getStockMaxPain: ({ ticker }) => {
-      return axios.get(`${origin}/trading/api/stocks/${ticker}/max-pain.json?jwt_token=${jwtToken}`
+      return fetch.get(`${origin}/trading/api/stocks/${ticker}/max-pain.json?jwt_token=${jwtToken}`
         ).then(r => {
           // logg(r, 'api getStock')
           return r.data
@@ -80,7 +78,7 @@ const useApiRouter = (props) => {
 
     /* plural */
     getStocks: () => {
-      return axios.get(`${origin}/trading/api/stocks.json?jwt_token=${jwtToken}`).then(r => {
+      return fetch.get(`${origin}/trading/api/stocks.json?jwt_token=${jwtToken}`).then(r => {
         // logg(r, 'r')
         return r.data.stocks
       })

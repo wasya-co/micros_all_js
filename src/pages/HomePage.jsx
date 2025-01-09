@@ -51,6 +51,7 @@ const Home = (props) => {
       <div className="d-flex">
         <SearchWidget name="Youtube"  url={(q) => `https://www.youtube.com/results?search_query=${q}`} />
         <SearchWidget name="CGTrader" url={(q) => `https://www.cgtrader.com/search?keywords=${q}`} />
+        <SearchWidget name="yandex" url={(q) => `https://yandex.ru/search/?text=${q}`} />
 
 
         {/* <Link className='card-link' to={appRouter.stocksIndex()} >

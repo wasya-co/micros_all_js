@@ -86,7 +86,8 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^5.0.0"
+    "babel-plugin-module-resolver": "^5.0.0",
+    "link-module-alias": "^1.2.0"
   },
   "eslintConfig": {
     "extends": [
@@ -176,9 +177,17 @@
       ]
     ]
   },
+  "_moduleAliases": {
+    "$shared": "src/shared",
+    "$src": "src"
+  },
   "scripts": {
     "start": "NODE_PATH=.:./config/environments/development node scripts/start.js",
     "build": "PUBLIC_URL=/ NODE_PATH=.:./config/environments/production node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "NODE_PATH=.:./config/environments/test                   node scripts/test.js   --no-watch -u ",
+    "test-watch": "NODE_PATH=.:./config/environments/test             node scripts/test.js   --watch ",
+    "test-one": "NODE_PATH=.:./config/environments/test               node scripts/test.js   -t 'BanksSearchModal' ",
+    "test-one-bk": "NODE_PATH=.:./config/environments/test            node scripts/test.js   -t 'EXEMPT' --detectOpenHandles  ",
+    "postinstall": "link-module-alias"
   }
 }

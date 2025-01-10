@@ -50,8 +50,8 @@ const Home = (props) => {
       </ul>
       <div className="d-flex">
         <SearchWidget name="Youtube"  url={(q) => `https://www.youtube.com/results?search_query=${q}`} />
-        <SearchWidget name="CGTrader" url={(q) => `https://www.cgtrader.com/search?keywords=${q}`} />
-        <SearchWidget name="yandex" url={(q) => `https://yandex.ru/search/?text=${q}`} />
+        <SearchWidget name="CGTrader" url={(q) => `https://www.cgtrader.com/search?keywords=${q}`} targetBlank={false} />
+        <SearchWidget name="Yandex"   url={(q) => `https://yandex.ru/search/?text=${q}`} />
 
 
         {/* <Link className='card-link' to={appRouter.stocksIndex()} >

@@ -52,8 +52,14 @@ const Home = (props) => {
         <SearchWidget name="Youtube"  url={(q) => `https://www.youtube.com/results?search_query=${q}`} />
         <SearchWidget name="CGTrader" url={(q) => `https://www.cgtrader.com/search?keywords=${q}`} targetBlank={false} />
         <SearchWidget name="Yandex"   url={(q) => `https://yandex.ru/search/?text=${q}`} />
+      </div>
+      <div className="d-flex">
+        <SearchWidget name="Yandex pics"    url={(q) => `https://yandex.ru/images/search?text=${q}`} />
+        <SearchWidget name="Startpage pics" url={(q) => `https://www.startpage.com/sp/search?query=${q}&cat=images`} />
+      </div>
 
 
+      <div className="d-flex">
         {/* <Link className='card-link' to={appRouter.stocksIndex()} >
           <div className='Card Glassmorphism' >
               <FontAwesomeIcon

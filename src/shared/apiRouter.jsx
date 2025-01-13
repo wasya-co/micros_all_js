@@ -24,7 +24,6 @@ const useApiRouter = (props) => {
   const {
     jwtToken,
   } = useContext(AppCtx)
-  logg(jwtToken, 'jwtToken in apiRouter')
 
   const origin = config.apiOrigin
 

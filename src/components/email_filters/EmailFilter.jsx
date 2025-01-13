@@ -33,21 +33,30 @@ import {
 
 library.add( faFilter, faInfoCircle, faSearch, faTimes )
 
-const fieldsList = [
-  {label: 'subject',   value: 'subject'},
-  {label: 'from',      value: 'from'},
-  {label: 'to',        value: 'to'},
-  {label: 'body',      value: 'body'},
-  {label: 'match exe', value: 'match-exe'},
+const actionsList = [
+  { label: 'Autorespond Template',     value: 'autorespond-template' },
+  { label: 'Execute Ruby',             value: 'exe' },
+  { label: 'Schedule Email Action',    value: 'autorespond-email-action' },
+  { label: 'Remove Email Action',      value: 'remove-email-action' },
+  { label: 'Add Tag',                  value: 'add-tag' },
+  { label: 'Remove Tag',               value: 'remove-tag' },
 ]
 
-const actionsList = [
-  { label: 'autorespond-template',     value: 'autorespond-template' },
-  { label: 'autorespond-email-action', value: 'autorespond-email-action' },
-  { label: 'add-tag',                  value: 'add-tag' },
-  { label: 'remove-tag',               value: 'remove-tag' },
-  { label: 'destroy-schs',             value: 'destroy-schs' },
+const fieldsList = [
+  { label: 'body',    value: 'body' },
+  { label: 'exe',     value: 'exe', valueKind: 'exe' },
+  { label: 'from',    value: 'from' },
+  { label: 'leadset', value: 'leadset' },
+  { label: 'subject', value: 'subject' },
+  { label: 'to',      value: 'to' },
 ]
+
+const operatorsList = [
+  { label: 'is',              value: 'equals',      valueKind: 'leadset-id'  },
+  { label: 'has tag',         value: 'has-tag',     valueKind: 'tag-id'  },
+  { label: 'doesnt have tag', value: 'not-has-tag', valueKind: 'tag-id'  },
+]
+
 
 /*
  * EmailFilter
@@ -90,6 +99,7 @@ const EmailFilter = (props) => {
   /* methods */
 
   const handleSave = () => {
+    logg(thisFilter, 'handleSave')
 
     const tmp = {...thisFilter}
     tmp.conditions_attributes = tmp.conditions
@@ -123,6 +133,9 @@ const EmailFilter = (props) => {
       </div>
 
       <div className='container'>
+
+        {/* Conditions */}
+
         <div className='row'>
           <h3 className='header'>
             Conditions
@@ -133,8 +146,8 @@ const EmailFilter = (props) => {
             } }>[+]</div>
           </h3>
         </div>
-
         { thisFilter.conditions.map((cond, idx) => <F key={idx} >
+          { logg(cond, 'this Cond') }
           <div className='d-flex'>
             <div className='btn' onClick={() => {
               if (window.confirm('Are you sure?')) {
@@ -142,18 +155,44 @@ const EmailFilter = (props) => {
                 setThisFilter({...thisFilter})
               }
             } }>[x]</div>
-            <label>If field &nbsp;</label>
-            <Select className='select2'
-              options={fieldsList}
-              value={fieldsList.filter((j) => cond.field === j.value )}
-              style={C.select2Styles}
-              onChange={(ev) => {
-                const tmp = { ...cond, field: ev.value }
-                thisFilter.conditions[idx] = tmp
-                setThisFilter({ ...thisFilter })
-              } }
-            />
-            { cond.field === 'match-exe' && <div className='ml-2 d-flex flex-column'>
+            <div>
+              <label>If field&nbsp;</label>
+              <Select className='select2'
+                options={fieldsList}
+                value={fieldsList.filter((j) => cond.field === j.value )}
+                style={C.select2Styles}
+                onChange={(ev) => {
+                  // logg(ev, 'select Field')
+                  const tmp = { ...cond, field: ev.value }
+                  // if (ev.valueKind) {
+                    tmp.valueKind = ev.valueKind
+                  // }
+                  thisFilter.conditions[idx] = tmp
+                  setThisFilter({ ...thisFilter })
+                } }
+              />
+            </div>
+
+            { cond.field === 'leadset' && <div className='ml-2 '>
+              <label>operator</label>
+              <Select className='select2'
+                options={operatorsList}
+                value={operatorsList.filter((j) => cond.operator === j.value )}
+                style={C.select2Styles}
+                onChange={(ev) => {
+                  const tmp = { ...cond, operator: ev.value }
+                  if (ev.valueKind) {
+                    tmp.valueKind = ev.valueKind
+                  }
+                  thisFilter.conditions[idx] = tmp
+                  setThisFilter({ ...thisFilter })
+                } }
+              />
+            </div> }
+
+            { /* ValueKinds */ }
+
+            { cond.valueKind === 'exe' && <div className='ml-2 d-flex flex-column'>
               <label>Ruby eval. Available: @lead , @company</label>
               <textarea value={cond.value} onChange={(ev) => {
                 cond.value = ev.target.value
@@ -161,8 +200,24 @@ const EmailFilter = (props) => {
                 setThisFilter({...thisFilter})
               } } ></textarea>
             </div> }
+            { cond.valueKind === 'tag-id' && <div className='ml-2'>
+              <label>Tag&nbsp;</label>
+              <Select className='select2'
+                options={tagsList}
+                value={tagsList.filter((j) => cond.value === j.value )}
+                style={C.select2Styles}
+                onChange={(ev) => {
+                  const tmp = { ...cond, value: ev.value }
+                  thisFilter.conditions[idx] = tmp
+                  setThisFilter({ ...thisFilter })
+                } }
+              />
+            </div> }
+
           </div>
         </F>) }
+
+        { /* Skip Conditions */ }
 
         <div className='row'>
           <h3 className='header'>
@@ -175,9 +230,11 @@ const EmailFilter = (props) => {
           </h3>
         </div>
 
+        { /* Actions */ }
+
         <div className='row'>
           <h3 className='header'>
-            Action
+            Actions
             <div className='btn' onClick={() => {
               const tmp = {...thisFilter}
               tmp.actions.push(defaultAction)

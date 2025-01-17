@@ -186,8 +186,7 @@
     "build": "PUBLIC_URL=/ NODE_PATH=.:./config/environments/production node scripts/build.js",
     "test": "NODE_PATH=.:./config/environments/test                   node scripts/test.js   --no-watch -u ",
     "test-watch": "NODE_PATH=.:./config/environments/test             node scripts/test.js   --watch ",
-    "test-one": "NODE_PATH=.:./config/environments/test               node scripts/test.js   -t 'BanksSearchModal' ",
-    "test-one-bk": "NODE_PATH=.:./config/environments/test            node scripts/test.js   -t 'EXEMPT' --detectOpenHandles  ",
+    "test-one": "NODE_PATH=.:./config/environments/test               node scripts/test.js   -t 'tag1' ",
     "postinstall": "link-module-alias"
   }
 }

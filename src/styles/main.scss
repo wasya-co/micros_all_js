@@ -159,11 +159,15 @@ table.bordered {
 
 .btn,
 .Btn {
-  padding: 0.2em;
+  padding: 0.5em;
   // background-color: #ccc;
   background-color: #eee;
   border-radius: 0.5em ;
   border-color: #ccc;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   &.primary {
     background-color: var(--wco-primary-bg-color);

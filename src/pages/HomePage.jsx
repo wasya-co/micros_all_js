@@ -57,6 +57,14 @@ const Home = (props) => {
         <SearchWidget name="Yandex pics"    url={(q) => `https://yandex.ru/images/search?text=${q}`} />
         <SearchWidget name="Startpage pics" url={(q) => `https://www.startpage.com/sp/search?query=${q}&cat=images`} />
       </div>
+      <div className="d-flex">
+        <SearchWidget name="Translate a Website" url={(q) => {
+          q = q.replace('https://', '')
+          var domain = q.split('/')[0]
+          var path = q.replace(domain, '').split('?')[0]
+          return `https://${domain.replaceAll('.', '-')}.translate.goog/${path}?_x_tr_sl=en&_x_tr_tl=es`
+        } } />
+      </div>
 
 
       <div className="d-flex">

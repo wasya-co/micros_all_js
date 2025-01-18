@@ -3,6 +3,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuildingColumns, faCreditCard, faMoon } from '@fortawesome/free-solid-svg-icons'
 
+import _AppBar from '@mui/material/AppBar'
+import AccountIcon from '@mui/icons-material/Person'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import Switch from '@mui/material/Switch'
+
 import React, {
   createContext,
   Fragment as F,
@@ -16,11 +22,9 @@ import {
   Route,
   Routes,
 } from "react-router-dom"
-import _AppBar from '@mui/material/AppBar'
-import AccountIcon from '@mui/icons-material/Person'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
-import Switch from '@mui/material/Switch'
+
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import config from 'config'
 
@@ -43,7 +47,8 @@ import {
   ConversationsIndex,
 } from './components/conversations'
 import {
-  EmailFilter,
+  EmailFilterModal,
+  EmailFiltersIndex,
 } from './components/email_filters'
 import {
   EmailContextsSummary,
@@ -66,10 +71,11 @@ library.add( faBuildingColumns, faCreditCard, faMoon )
  * LayoutMain
 **/
 const LayoutMain = (props) => {
-  logg(props, 'LayoutMain')
+  // logg(props, 'LayoutMain')
 
   const {
     cuEmail,
+    loading, setLoading,
     pageTitle,
     sidebarContent,
   } = useContext(AppCtx)
@@ -82,7 +88,7 @@ const LayoutMain = (props) => {
   if (!cuEmail) { return <div>.^.</div> }
   return <Router>
 
-    <EmailFilter />
+    <EmailFilterModal />
 
     <div className="MainW">
       <div className={`Sidebar ${drawerOpen}`} >
@@ -125,11 +131,17 @@ const LayoutMain = (props) => {
           </div>
         </header>
 
+        { loading && <div className='Loading'><img src="/assets/images/spinner_sm.gif" alt='Loading...' /></div> || null }
+
+        <ToastContainer hideProgressBar={true} />
+
         <div className="MainC">
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/email" element={<LayoutEmail />} >
               <Route path="" exact element={<EmailHomePage />} />
+              <Route path="email_filters" exact element={<EmailFiltersIndex />} />
+              <Route path="email_filters/:id" exact element={<EmailFiltersIndex />} />
               <Route path="tags/:tagname" exact element={<ConversationsIndex />} />
               <Route path="contexts/summary" exact element={<EmailContextsSummary />} />
             </Route>

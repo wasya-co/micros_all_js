@@ -46,11 +46,19 @@ const AppProvider = ({ children, ...props }) => {
   const [ cuEmail, setCuEmail ] = useState( null )
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
   const [ jwtToken, setJwtToken ] = useState(null)
-  const [ loading, setLoading ] = useState(false)
   const [ pageTitle, setPageTitle ] = useState('default Page Title')
   const [ params, setParams ] = useState({})
   const [ sidebarContent, setSidebarContent ] = useState(null)
   const [ tagsList, setTagsList ] = useState([])
+
+  const [ loading, _setLoading ] = useState(0)
+  const setLoading = (which, prev) => {
+    if (which) {
+      _setLoading(prev => prev + 1)
+    } else {
+      _setLoading(prev => prev - 1)
+    }
+  }
 
   useEffect(() => {
     if (config.skip_keycloak) {

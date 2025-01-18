@@ -340,6 +340,10 @@ table.bordered {
   backdrop-filter: blur(15px);
 }
 
+.gray {
+  color: #bbb;
+}
+
 /* J */
 .jwt-token {
   overflow: hidden;
@@ -365,6 +369,18 @@ table.bordered {
     .Card {
       margin-right: 2em;
     }
+  }
+}
+
+.Loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  img {
+    position: absolute;
+    top: calc( 50% - 32px );
+    left: calc( 50% - 32px );
   }
 }
 

@@ -2,6 +2,7 @@
 const appRouter = {
   emailRootPath: () => '/email',
   emailContextsSummaryPath: () => '/email/contexts/summary',
+  emailFilterPath: ({ id }) => `/email/email_filters/${id}`,
   emailFiltersPath: () => '/email/email_filters',
   newEmailFilterPath: () => '/email/email_filters/new',
   emailInboxPath: () => '/email/inbox',

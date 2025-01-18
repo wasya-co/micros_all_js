@@ -59,9 +59,9 @@ const operatorsList = [
 
 
 /*
- * EmailFilter
+ * EmailFilterModal
 **/
-const EmailFilter = (props) => {
+const EmailFilterModal = (props) => {
   // logg(props, 'EmailFilter')
 
   /* ctx */
@@ -69,56 +69,66 @@ const EmailFilter = (props) => {
   const apiRouter = useApiRouter()
 
   const {
+    loading, setLoading,
     tagsList,
   } = useContext(AppCtx)
+  logg(useContext(AppCtx), 'AppCtx in EmailFilterModal')
 
   const {
     emailActionsList,
+    emailFilter, setEmailFilter,
     emailFilterModalOpen, setEmailFilterModalOpen,
     emailTemplatesList,
   } = useContext(EmailCtx)
+  logg(useContext(EmailCtx), 'EmailCtx in EmailFilterModal')
 
   /* state */
 
-  const defaultFilter = {
-    actions: [],
-    conditions: [],
-    skip_conditions: [],
-  }
   const defaultAction = {
-    kind: false,
+    // kind: false,
     value: '',
   }
   const defaultCondition = {
-    field: false,
-    matchtype: false,
+    // field: false,
+    // matchtype: false,
     value: '',
   }
-  const [ thisFilter, setThisFilter ] = useState(defaultFilter)
 
   /* methods */
 
   const handleSave = () => {
-    logg(thisFilter, 'handleSave')
-
-    const tmp = {...thisFilter}
+    const tmp = {...emailFilter}
     tmp.conditions_attributes = tmp.conditions
     delete tmp.conditions
     tmp.skip_conditions_attributes = tmp.skip_conditions
     delete tmp.skip_conditions
     tmp.actions_attributes = tmp.actions
     delete tmp.actions
+    logg(tmp, 'handleSave email_filter')
 
-    fetch(apiRouter.emailFiltersPath(), {
-      method: 'POST',
+    setLoading(true)
+    fetch(tmp.id ? apiRouter.emailFilterPath(tmp) : apiRouter.emailFiltersPath(), {
+      method: tmp.id ? 'PATCH' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email_filter: tmp,
       }),
+    }).then(r => {
+      if (!r.ok) {
+        throw new Error("We're sorry, something went wrong. Please try again later.")
+      }
+      return r.json()
     }).then(outs => {
       logg(outs, 'saved an EmailFilter?')
+    }).catch(err => {
+      toast('could not save the EmailFilter')
+      logg(err, 'could not save the EmailFilter')
+    }).finally(() => {
+      setLoading(false)
     })
   }
+
+  logg(emailFilter, 'emailFilter')
 
   return <F>
     <Modal
@@ -129,7 +139,8 @@ const EmailFilter = (props) => {
       overlayClassName="ModalOverlay"
     >
       <div className='modal-header'>
-        Email Filter
+        Email Filter &nbsp; &nbsp;
+        <span className='gray'>{emailFilter.id}</span>
       </div>
 
       <div className='container'>
@@ -140,19 +151,19 @@ const EmailFilter = (props) => {
           <h3 className='header'>
             Conditions
             <div className='btn' onClick={() => {
-              const tmp = {...thisFilter}
+              const tmp = {...emailFilter}
               tmp.conditions.push(defaultCondition)
-              setThisFilter(tmp)
+              setEmailFilter(tmp)
             } }>[+]</div>
           </h3>
         </div>
-        { thisFilter.conditions.map((cond, idx) => <F key={idx} >
+        { emailFilter.conditions.map((cond, idx) => <F key={idx} >
           { logg(cond, 'this Cond') }
           <div className='d-flex'>
             <div className='btn' onClick={() => {
               if (window.confirm('Are you sure?')) {
-                thisFilter.conditions.splice(idx, 1)
-                setThisFilter({...thisFilter})
+                emailFilter.conditions.splice(idx, 1)
+                setEmailFilter({...emailFilter})
               }
             } }>[x]</div>
             <div>
@@ -167,8 +178,8 @@ const EmailFilter = (props) => {
                   // if (ev.valueKind) {
                     tmp.valueKind = ev.valueKind
                   // }
-                  thisFilter.conditions[idx] = tmp
-                  setThisFilter({ ...thisFilter })
+                  emailFilter.conditions[idx] = tmp
+                  setEmailFilter({ ...emailFilter })
                 } }
               />
             </div>
@@ -184,8 +195,8 @@ const EmailFilter = (props) => {
                   if (ev.valueKind) {
                     tmp.valueKind = ev.valueKind
                   }
-                  thisFilter.conditions[idx] = tmp
-                  setThisFilter({ ...thisFilter })
+                  emailFilter.conditions[idx] = tmp
+                  setEmailFilter({ ...emailFilter })
                 } }
               />
             </div> }
@@ -196,8 +207,8 @@ const EmailFilter = (props) => {
               <label>Ruby eval. Available: @lead , @company</label>
               <textarea value={cond.value} onChange={(ev) => {
                 cond.value = ev.target.value
-                thisFilter.conditions[idx] = cond
-                setThisFilter({...thisFilter})
+                emailFilter.conditions[idx] = cond
+                setEmailFilter({...emailFilter})
               } } ></textarea>
             </div> }
             { cond.valueKind === 'tag-id' && <div className='ml-2'>
@@ -208,8 +219,8 @@ const EmailFilter = (props) => {
                 style={C.select2Styles}
                 onChange={(ev) => {
                   const tmp = { ...cond, value: ev.value }
-                  thisFilter.conditions[idx] = tmp
-                  setThisFilter({ ...thisFilter })
+                  emailFilter.conditions[idx] = tmp
+                  setEmailFilter({ ...emailFilter })
                 } }
               />
             </div> }
@@ -223,9 +234,9 @@ const EmailFilter = (props) => {
           <h3 className='header'>
             Skip Conditions
             <div className='btn' onClick={() => {
-              const tmp = {...thisFilter}
+              const tmp = {...emailFilter}
               tmp.skip_conditions.push(defaultCondition)
-              setThisFilter(tmp)
+              setEmailFilter(tmp)
             } }>[+]</div>
           </h3>
         </div>
@@ -236,18 +247,18 @@ const EmailFilter = (props) => {
           <h3 className='header'>
             Actions
             <div className='btn' onClick={() => {
-              const tmp = {...thisFilter}
+              const tmp = {...emailFilter}
               tmp.actions.push(defaultAction)
-              setThisFilter(tmp)
+              setEmailFilter(tmp)
             } }>[+]</div>
           </h3>
         </div>
-        { thisFilter.actions.map((act, idx) => <F key={idx} >
+        { emailFilter.actions.map((act, idx) => <F key={idx} >
           <div className='d-flex'>
             <div className='btn' onClick={() => {
               if (window.confirm('Are you sure?')) {
-                thisFilter.actions.splice(idx, 1)
-                setThisFilter({...thisFilter})
+                emailFilter.actions.splice(idx, 1)
+                setEmailFilter({...emailFilter})
               }
             } }>[x]</div>
             <label>Then &nbsp;</label>
@@ -256,8 +267,8 @@ const EmailFilter = (props) => {
               value={actionsList.filter((j) => act.kind === j.value )}
               style={C.select2Styles}
               onChange={(ev) => {
-                thisFilter.actions[idx].kind = ev.value
-                setThisFilter({ ...thisFilter })
+                emailFilter.actions[idx].kind = ev.value
+                setEmailFilter({ ...emailFilter })
               } }
             />
             { ['add-tag', 'remove-tag'].indexOf(act.kind) != -1  && <div className='ml-2 d-flex flex-column'>
@@ -267,8 +278,8 @@ const EmailFilter = (props) => {
                 value={tagsList.filter((j) => act.value === j.value )}
                 style={C.select2Styles}
                 onChange={(ev) => {
-                  thisFilter.actions[idx].value = ev.value
-                  setThisFilter({...thisFilter})
+                  emailFilter.actions[idx].value = ev.value
+                  setEmailFilter({...emailFilter})
                 } }
               />
             </div> }
@@ -279,8 +290,11 @@ const EmailFilter = (props) => {
                 value={emailTemplatesList.filter((j) => act.value === j.value )}
                 style={C.select2Styles}
                 onChange={(ev) => {
-                  thisFilter.actions[idx].value = ev.value
-                  setThisFilter({...thisFilter})
+                  logg(ev, 'which template')
+                  const tmp = {...emailFilter}
+                  tmp.actions[idx].value = ev.value
+                  logg(tmp, 'tmp')
+                  setEmailFilter(tmp)
                 } }
               />
             </div>}
@@ -291,8 +305,8 @@ const EmailFilter = (props) => {
                 value={emailActionsList.filter((j) => act.value === j.value )}
                 style={C.select2Styles}
                 onChange={(ev) => {
-                  thisFilter.actions[idx].value = ev.value
-                  setThisFilter({...thisFilter})
+                  emailFilter.actions[idx].value = ev.value
+                  setEmailFilter({...emailFilter})
                 } }
               />
             </div> }
@@ -310,4 +324,4 @@ const EmailFilter = (props) => {
     </Modal>
   </F>
 }
-export default EmailFilter
+export default EmailFilterModal

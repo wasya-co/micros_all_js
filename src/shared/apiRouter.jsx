@@ -33,6 +33,7 @@ const useApiRouter = (props) => {
      * email
     **/
     emailActionTemplatesPath: () => `${origin}/email/api/email_action_templates.json?jwt_token=${jwtToken}`,
+    emailFilterPath: ({ id }) => `${origin}/email/api/email_filters/${id}.json?jwt_token=${jwtToken}`,
     emailFiltersPath: () => `${origin}/email/api/email_filters.json?jwt_token=${jwtToken}`,
     emailTemplatesPath: () => `${origin}/email/api/email_templates.json?jwt_token=${jwtToken}`,
     getEmailContextsSummary: () => {

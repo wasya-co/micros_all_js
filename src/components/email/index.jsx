@@ -12,6 +12,12 @@ import EmailHomePage from './EmailHomePage'
 
 const EmailCtx = createContext({})
 
+const defaultEmailFilter = {
+  actions: [],
+  conditions: [],
+  skip_conditions: [],
+}
+
 /**
  * EmailProvider
 **/
@@ -25,7 +31,11 @@ const EmailProvider = ({ children, ...props }) => {
 
   /* state */
 
+  const [ emailFilter, setEmailFilter ] = useState(defaultEmailFilter)
   const [ emailFilterModalOpen, setEmailFilterModalOpen ] = useState(false)
+  const [ emailFiltersList, setEmailFiltersList ] = useState([])
+
+
   const [ emailTemplatesList, setEmailTemplatesList ] = useState([])
   const [ emailActionsList, setEmailActionsList ] = useState([])
 
@@ -34,16 +44,21 @@ const EmailProvider = ({ children, ...props }) => {
   useEffect(() => {
     if (!jwtToken) return
     fetch(apiRouter.emailActionTemplatesPath()).then(r => r.json()).then(inns => {
-      logg(inns, "I can has email actions?")
       setEmailActionsList(inns.email_action_templates)
     })
   }, [ jwtToken ] )
 
   useEffect(() => {
     if (!jwtToken) return
+    fetch(apiRouter.emailFiltersPath()).then(r => r.json()).then(({ items, }) => {
+      setEmailFiltersList(items)
+    })
+  }, [ jwtToken ] )
+
+  useEffect(() => {
+    if (!jwtToken) return
     fetch(apiRouter.emailTemplatesPath()).then(r => r.json()).then(inns => {
-      logg(inns, "I can has email templates?")
-      setEmailTemplatesList(inns.email_templates)
+      setEmailTemplatesList(inns.items)
     })
   }, [ jwtToken ] )
 
@@ -52,15 +67,20 @@ const EmailProvider = ({ children, ...props }) => {
 
 
   return <EmailCtx.Provider value={{
-    emailFilterModalOpen, setEmailFilterModalOpen,
-    emailTemplatesList, setEmailTemplatesList,
     emailActionsList, setEmailActionsList,
+    emailFilter, setEmailFilter,
+    emailFilterModalOpen, setEmailFilterModalOpen,
+    emailFiltersList, setEmailFiltersList,
+    emailTemplatesList, setEmailTemplatesList,
+
   }} >
     { children }
   </EmailCtx.Provider>
 }
 
 export {
+  defaultEmailFilter,
+
   EmailCtx,
   EmailHomePage,
   EmailProvider,

@@ -1,6 +1,12 @@
 
-import EmailFilter from './EmailFilter'
+import EmailFilterModal from './EmailFilterModal'
+
+import EmailFiltersIndex from './EmailFiltersIndex'
 
 export {
-  EmailFilter,
+  // sg
+  EmailFilterModal,
+
+  // pl
+  EmailFiltersIndex,
 }

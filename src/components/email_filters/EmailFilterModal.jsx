@@ -43,18 +43,19 @@ const actionsList = [
 ]
 
 const fieldsList = [
-  { label: 'body',    value: 'body' },
-  { label: 'exe',     value: 'exe', valueKind: 'exe' },
-  { label: 'from',    value: 'from' },
-  { label: 'leadset', value: 'leadset' },
-  { label: 'subject', value: 'subject' },
-  { label: 'to',      value: 'to' },
+  { label: 'body',    isDisabled: true, value: 'body',                },
+  { label: 'exe',     isDisabled: true, value: 'exe', operator: 'exe' },
+  { label: 'from',    isDisabled: true, value: 'from' },
+  { label: 'leadset',                   value: 'leadset' },
+  { label: 'subject', isDisabled: true, value: 'subject' },
+  { label: 'to',      isDisabled: true, value: 'to' },
 ]
 
 const operatorsList = [
-  { label: 'is',              value: 'equals',      valueKind: 'leadset-id'  },
-  { label: 'has tag',         value: 'has-tag',     valueKind: 'tag-id'  },
-  { label: 'doesnt have tag', value: 'not-has-tag', valueKind: 'tag-id'  },
+  { label: 'is',              value: 'equals',      },
+  // { label: 'is',              value: 'leadset',      },
+  { label: 'has tag',         value: 'has-tag',     },
+  { label: 'doesnt have tag', value: 'not-has-tag', },
 ]
 
 
@@ -90,7 +91,7 @@ const EmailFilterModal = (props) => {
   }
   const defaultCondition = {
     // field: false,
-    // matchtype: false,
+    // operator: false,
     value: '',
   }
 
@@ -158,43 +159,33 @@ const EmailFilterModal = (props) => {
           </h3>
         </div>
         { emailFilter.conditions.map((cond, idx) => <F key={idx} >
-          { logg(cond, 'this Cond') }
-          <div className='d-flex'>
+          { '1' === cond._destroy && <div>Deleted</div> || <div className='d-flex'>
             <div className='btn' onClick={() => {
-              if (window.confirm('Are you sure?')) {
-                emailFilter.conditions.splice(idx, 1)
-                setEmailFilter({...emailFilter})
-              }
+              emailFilter.conditions[idx]._destroy = '1'
+              setEmailFilter({...emailFilter})
             } }>[x]</div>
-            <div>
-              <label>If field&nbsp;</label>
-              <Select className='select2'
-                options={fieldsList}
-                value={fieldsList.filter((j) => cond.field === j.value )}
-                style={C.select2Styles}
-                onChange={(ev) => {
-                  // logg(ev, 'select Field')
-                  const tmp = { ...cond, field: ev.value }
-                  // if (ev.valueKind) {
-                    tmp.valueKind = ev.valueKind
-                  // }
-                  emailFilter.conditions[idx] = tmp
-                  setEmailFilter({ ...emailFilter })
-                } }
-              />
-            </div>
 
+            { /* Field */ }
+            <Select className='select2'
+              options={fieldsList}
+              value={fieldsList.filter((j) => cond.field === j.value )}
+              style={C.select2Styles}
+              onChange={(ev) => {
+                const tmp = { ...cond, field: ev.value }
+                if (ev.operator) { tmp.operator = ev.operator }
+                emailFilter.conditions[idx] = tmp
+                setEmailFilter({ ...emailFilter })
+              } }
+            />
+
+            { /* Operator */ }
             { cond.field === 'leadset' && <div className='ml-2 '>
-              <label>operator</label>
               <Select className='select2'
                 options={operatorsList}
                 value={operatorsList.filter((j) => cond.operator === j.value )}
                 style={C.select2Styles}
                 onChange={(ev) => {
                   const tmp = { ...cond, operator: ev.value }
-                  if (ev.valueKind) {
-                    tmp.valueKind = ev.valueKind
-                  }
                   emailFilter.conditions[idx] = tmp
                   setEmailFilter({ ...emailFilter })
                 } }
@@ -203,7 +194,7 @@ const EmailFilterModal = (props) => {
 
             { /* ValueKinds */ }
 
-            { cond.valueKind === 'exe' && <div className='ml-2 d-flex flex-column'>
+            { cond.operator === 'exe' && <div className='ml-2 d-flex flex-column'>
               <label>Ruby eval. Available: @lead , @company</label>
               <textarea value={cond.value} onChange={(ev) => {
                 cond.value = ev.target.value
@@ -211,8 +202,8 @@ const EmailFilterModal = (props) => {
                 setEmailFilter({...emailFilter})
               } } ></textarea>
             </div> }
-            { cond.valueKind === 'tag-id' && <div className='ml-2'>
-              <label>Tag&nbsp;</label>
+            { ['has-tag', 'not-has-tag'].indexOf(cond.operator) != -1 && <div className='ml-2'>
+              {/* <label>Tag&nbsp;</label> */}
               <Select className='select2'
                 options={tagsList}
                 value={tagsList.filter((j) => cond.value === j.value )}
@@ -225,7 +216,7 @@ const EmailFilterModal = (props) => {
               />
             </div> }
 
-          </div>
+          </div> }
         </F>) }
 
         { /* Skip Conditions */ }
@@ -254,14 +245,12 @@ const EmailFilterModal = (props) => {
           </h3>
         </div>
         { emailFilter.actions.map((act, idx) => <F key={idx} >
-          <div className='d-flex'>
+          { '1' === act._destroy && <div>Deleted</div> || <div className='d-flex'>
             <div className='btn' onClick={() => {
-              if (window.confirm('Are you sure?')) {
-                emailFilter.actions.splice(idx, 1)
-                setEmailFilter({...emailFilter})
-              }
+              emailFilter.actions[idx]._destroy = '1'
+              setEmailFilter({...emailFilter})
             } }>[x]</div>
-            <label>Then &nbsp;</label>
+            {/* <label>Then &nbsp;</label> */}
             <Select className='select2'
               options={actionsList}
               value={actionsList.filter((j) => act.kind === j.value )}
@@ -284,7 +273,7 @@ const EmailFilterModal = (props) => {
               />
             </div> }
             { 'autorespond-template' === act.kind && <div className='ml-2 d-flex flex-column'>
-              <label>which template</label>
+              {/* <label>which template</label> */}
               <Select className='select2'
                 options={emailTemplatesList}
                 value={emailTemplatesList.filter((j) => act.value === j.value )}
@@ -310,7 +299,7 @@ const EmailFilterModal = (props) => {
                 } }
               />
             </div> }
-          </div>
+          </div> }
         </F>) }
 
       </div>{/* container */}

@@ -13,6 +13,9 @@ import {
   useApiRouter,
 } from '$shared'
 import {
+  AppCtx,
+} from '$src/App'
+import {
   EmailCtx,
 } from '$src/components/email'
 import {
@@ -35,13 +38,19 @@ afterEach(() => {
 
 describe('EmailFiltersIndex', () => {
 
-  test('renders', async () => {
+  test('renders - tag1', async () => {
     render(<Router>
-      <EmailCtx.Provider value={{
-        emailFilterModalOpen: true,
+      <AppCtx.Provider value={{
+        loading: false, setLoading: () => {},
       }} >
-        <EmailFiltersIndex />
-      </EmailCtx.Provider>
+        <EmailCtx.Provider value={{
+          emailFilter: {},            setEmailFilter: () => {},
+          emailFilterModalOpen: true, setEmailFilterModalOpen: () => {},
+          emailFiltersList: [],       setEmailFiltersList: () => {},
+        }} >
+          <EmailFiltersIndex />
+        </EmailCtx.Provider>
+      </AppCtx.Provider>
     </Router>)
 
     // const btn = screen.getByText("EmailFiltersIndex")

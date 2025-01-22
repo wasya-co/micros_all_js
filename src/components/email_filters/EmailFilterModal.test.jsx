@@ -13,10 +13,13 @@ import {
   useApiRouter,
 } from '$shared'
 import {
+  AppCtx,
+} from '$src/App'
+import {
   EmailCtx,
 } from '$src/components/email'
 import {
-  EmailFilter,
+  EmailFilterModal,
 } from '$src/components/email_filters'
 
 let fetchSpy
@@ -33,15 +36,20 @@ afterEach(() => {
 })
 
 
-describe('EmailFilter', () => {
+describe('EmailFilterModal', () => {
 
-  test('POST create - tag1', async () => {
+  test('POST create', async () => {
     render(<Router>
-      <EmailCtx.Provider value={{
-        emailFilterModalOpen: true,
+      <AppCtx.Provider value={{
+        loading: false, setLoading: () => {},
       }} >
-        <EmailFilter />
-      </EmailCtx.Provider>
+        <EmailCtx.Provider value={{
+          emailFilter: { actions: [], conditions: []},
+          emailFilterModalOpen: true,
+        }} >
+          <EmailFilterModal />
+        </EmailCtx.Provider>
+      </AppCtx.Provider>
     </Router>)
 
     const btn = screen.getByText("Save")

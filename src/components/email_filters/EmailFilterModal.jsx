@@ -28,35 +28,16 @@ import {
   AppCtx,
 } from '$src/App'
 import {
+  actionsList,
   EmailCtx,
+  operatorsList,
+  fieldsList,
 } from '$src/components/email'
+import {
+  EmailFilterCondition,
+} from '$src/components/email_filters'
 
 library.add( faFilter, faInfoCircle, faSearch, faTimes )
-
-const actionsList = [
-  { label: 'Autorespond Template',     value: 'autorespond-template' },
-  { label: 'Execute Ruby',             value: 'exe' },
-  { label: 'Schedule Email Action',    value: 'autorespond-email-action' },
-  { label: 'Remove Email Action',      value: 'remove-email-action' },
-  { label: 'Add Tag',                  value: 'add-tag' },
-  { label: 'Remove Tag',               value: 'remove-tag' },
-]
-
-const fieldsList = [
-  { label: 'body',    isDisabled: true, value: 'body',                },
-  { label: 'exe',     isDisabled: true, value: 'exe', operator: 'exe' },
-  { label: 'from',    isDisabled: true, value: 'from' },
-  { label: 'leadset',                   value: 'leadset' },
-  { label: 'subject', isDisabled: true, value: 'subject' },
-  { label: 'to',      isDisabled: true, value: 'to' },
-]
-
-const operatorsList = [
-  { label: 'is',              value: 'equals',      },
-  // { label: 'is',              value: 'leadset',      },
-  { label: 'has tag',         value: 'has-tag',     },
-  { label: 'doesnt have tag', value: 'not-has-tag', },
-]
 
 
 /*
@@ -86,12 +67,9 @@ const EmailFilterModal = (props) => {
   /* state */
 
   const defaultAction = {
-    // kind: false,
     value: '',
   }
   const defaultCondition = {
-    // field: false,
-    // operator: false,
     value: '',
   }
 
@@ -114,15 +92,16 @@ const EmailFilterModal = (props) => {
       body: JSON.stringify({
         email_filter: tmp,
       }),
-    }).then(r => {
+    }).then(async (r) => {
       if (!r.ok) {
-        throw new Error("We're sorry, something went wrong. Please try again later.")
+        const a = await r.json()
+        throw a.messages
       }
       return r.json()
     }).then(outs => {
-      logg(outs, 'saved an EmailFilter?')
+      toast('Saved the EmailFilter.')
     }).catch(err => {
-      toast('could not save the EmailFilter')
+      toast(`Could not save the EmailFilter: ${err}.`)
       logg(err, 'could not save the EmailFilter')
     }).finally(() => {
       setLoading(false)
@@ -179,7 +158,8 @@ const EmailFilterModal = (props) => {
             />
 
             { /* Operator */ }
-            { cond.field === 'leadset' && <div className='ml-2 '>
+
+            { 'leadset' === cond.field && <div className='ml-2 '>
               <Select className='select2'
                 options={operatorsList}
                 value={operatorsList.filter((j) => cond.operator === j.value )}
@@ -192,9 +172,9 @@ const EmailFilterModal = (props) => {
               />
             </div> }
 
-            { /* ValueKinds */ }
+            { /* Value */ }
 
-            { cond.operator === 'exe' && <div className='ml-2 d-flex flex-column'>
+            { 'textarea' === cond.operator && <div className='ml-2 d-flex flex-column'>
               <label>Ruby eval. Available: @lead , @company</label>
               <textarea value={cond.value} onChange={(ev) => {
                 cond.value = ev.target.value
@@ -215,6 +195,13 @@ const EmailFilterModal = (props) => {
                 } }
               />
             </div> }
+            { 'text-input' === cond.operator && <div className='ml-2'>
+              <input value={cond.value} onChange={(ev) => {
+                cond.value = ev.target.value
+                emailFilter.conditions[idx] = cond
+                setEmailFilter({...emailFilter})
+              } } />
+            </div> }
 
           </div> }
         </F>) }
@@ -226,11 +213,14 @@ const EmailFilterModal = (props) => {
             Skip Conditions
             <div className='btn' onClick={() => {
               const tmp = {...emailFilter}
-              tmp.skip_conditions.push(defaultCondition)
+              tmp.skip_conditions.push({ ...defaultCondition })
               setEmailFilter(tmp)
             } }>[+]</div>
           </h3>
         </div>
+        { emailFilter.skip_conditions.map((scond, idx) =>
+          <EmailFilterCondition cond={scond} key={idx} idx={idx} resource={'skip_conditions'} />
+        ) }
 
         { /* Actions */ }
 

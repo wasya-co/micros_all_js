@@ -11,7 +11,7 @@ import {
  * SearchWidget
 **/
 const SearchWidget = ({ children, ...props }) => {
-  logg(props, 'SearchWidget')
+  // logg(props, 'SearchWidget')
   const {
     name,
     targetBlank = true,

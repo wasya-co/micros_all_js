@@ -60,7 +60,8 @@ const EmailFiltersIndex = (props) => {
 
   /* effects */
 
-  useEffect(() => {
+  useEffect(() => { // load one EmailFilter
+    if (!id) { return; }
     setLoading(true)
     fetch(apiRouter.emailFilterPath({ id })).then(r => r.json()).then((item) => {
       setEmailFilter(item)

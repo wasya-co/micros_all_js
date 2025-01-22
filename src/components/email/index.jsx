@@ -10,13 +10,25 @@ import {
 import { AppCtx } from "$src/App"
 import EmailHomePage from './EmailHomePage'
 
-const EmailCtx = createContext({})
+
+const actionsList = [
+  { label: 'Autorespond Template',     value: 'autorespond-template' },
+  { label: 'Execute Ruby',             value: 'exe' },
+  { label: 'Schedule Email Action',    value: 'autorespond-email-action' },
+  { label: 'Remove Email Action',      value: 'remove-email-action' },
+  { label: 'Add Tag',                  value: 'add-tag' },
+  { label: 'Remove Tag',               value: 'remove-tag' },
+]
+
+
 
 const defaultEmailFilter = {
   actions: [],
   conditions: [],
   skip_conditions: [],
 }
+
+const EmailCtx = createContext({})
 
 /**
  * EmailProvider
@@ -78,12 +90,31 @@ const EmailProvider = ({ children, ...props }) => {
   </EmailCtx.Provider>
 }
 
+const fieldsList = [
+  { label: 'body',    isDisabled: true, value: 'body',                },
+  { label: 'exe',     isDisabled: true, value: 'exe', operator: 'textarea' },
+  { label: 'from',    isDisabled: true, value: 'from' },
+  { label: 'leadset',                   value: 'leadset' },
+  { label: 'subject', isDisabled: true, value: 'subject' },
+  { label: 'to',                        value: 'to', operator: 'text-input' },
+]
+const operatorsList = [
+  { label: 'is',              value: 'equals',      },
+  // { label: 'is',              value: 'leadset',      },
+  { label: 'has tag',         value: 'has-tag',     },
+  { label: 'doesnt have tag', value: 'not-has-tag', },
+]
+
 export {
+  actionsList,
+
   defaultEmailFilter,
 
   EmailCtx,
   EmailHomePage,
   EmailProvider,
 
+  fieldsList,
+  operatorsList,
 }
 

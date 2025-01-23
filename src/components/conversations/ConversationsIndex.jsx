@@ -15,19 +15,22 @@ const ConversationsIndex = (props) => {
 
   const apiRouter = useApiRouter()
   const params = useParams()
+  const {
+    slug,
+  } = params
   // logg(params, 'params in ConversationsIndex')
 
   const [ conversations, setConversations ] = useState([])
 
   useEffect(() => {
-    apiRouter.tagConversations(params).then(inns => {
-      logg(inns, 'fetched conversations in tag')
+    apiRouter.tagConversations({ slug, }).then(inns => {
+      // logg(inns, 'fetched conversations in tag')
       setConversations(inns.conversations)
     })
   }, [ params ])
 
   return <F>
-    <h3>Conversations Index</h3>
+    <h5>Conversations in tag: `{slug}`</h5>
     <ul>
       { conversations.map((conv, idx) => <li key={idx}>
         <h4>{conv.subject}</h4>

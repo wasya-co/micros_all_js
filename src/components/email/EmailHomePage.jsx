@@ -23,6 +23,7 @@ const EmailHomePage = () => {
   return <F>
     <p>Email home.</p>
     <ul>
+      <li><Link to={appRouter.emailTagPath('inbox')}>inbox</Link></li>
       <li><b>email contexts</b>&nbsp;
         <Link to={appRouter.emailContextsSummaryPath()} >[summary]</Link>
       </li>

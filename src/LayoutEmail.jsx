@@ -72,7 +72,7 @@ library.add( faBuildingColumns, faCreditCard, faMoon )
  * LayoutEmail
 **/
 const LayoutEmail = (props) => {
-  // logg(props, 'LayoutEmail')
+  logg(props, 'LayoutEmail')
 
   const [ cuEmail, setCuEmail ] = useState('replace-me@TODO')
   const [ drawerOpen, setDrawerOpen ] = useState(C.classes.sidebarIsOpen)
@@ -81,6 +81,7 @@ const LayoutEmail = (props) => {
 
   if (!cuEmail) { return <div>.^.</div> }
   return <div className="Layout LayoutEmail">
+    <h5>Email Layout</h5>
     <Outlet />
   </div>
 }

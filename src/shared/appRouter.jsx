@@ -5,8 +5,9 @@ const appRouter = {
   emailFilterPath: ({ id }) => `/email/email_filters/${id}`,
   emailFiltersPath: () => '/email/email_filters',
   newEmailFilterPath: () => '/email/email_filters/new',
-  emailInboxPath: () => '/email/inbox',
-  emailInboxRoute:      '/email/inbox',
+  emailInboxPath: () => '/email/tags/inbox',
+  emailInboxRoute:      '/email/tags/inbox',
+  emailTagPath: (slug) => `/email/tags/${slug}`,
 
   hostingRootPath: () => '/hosting',
 

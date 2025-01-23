@@ -44,7 +44,7 @@ describe('EmailFilterModal', () => {
         loading: false, setLoading: () => {},
       }} >
         <EmailCtx.Provider value={{
-          emailFilter: { actions: [], conditions: []},
+          emailFilter: { actions: [], conditions: [], skip_conditions: []},
           emailFilterModalOpen: true,
         }} >
           <EmailFilterModal />

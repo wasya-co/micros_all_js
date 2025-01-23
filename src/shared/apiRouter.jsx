@@ -43,11 +43,12 @@ const useApiRouter = (props) => {
           return r.data
         })
     },
-    tagConversations: ({ tagname, }) => {
-      return fetch.get(`${origin}/email/api/tags/${tagname}/conversations.json?jwt_token=${jwtToken}`
+    tagPath: ({ slug, }) => `${origin}/email/api/tags/${slug}.json?jwt_token=${jwtToken}`,
+    tagConversations: ({ slug, }) => {
+      return fetch(`${origin}/email/api/tags/${slug}/conversations.json?jwt_token=${jwtToken}`
         ).then(r => {
-          logg(r, 'api tagConversationsPath')
-          return r.data
+          // logg(r, 'apiRouter.tagConversations')
+          return r.json()
         })
     },
     tagsPath: ({ jwtToken, }) => `${origin}/wco/api/tags.json?jwt_token=${jwtToken}`,

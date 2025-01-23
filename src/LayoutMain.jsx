@@ -139,21 +139,20 @@ const LayoutMain = (props) => {
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/email" element={<LayoutEmail />} >
-              <Route path="" exact element={<EmailHomePage />} />
-              <Route path="email_filters" exact element={<EmailFiltersIndex />} />
-              <Route path="email_filters/:id" exact element={<EmailFiltersIndex />} />
-              <Route path="tags/:tagname" exact element={<ConversationsIndex />} />
-              <Route path="contexts/summary" exact element={<EmailContextsSummary />} />
+              <Route path="tags/:slug"        exact element={<ConversationsIndex />} />
             </Route>
+            <Route path="/email/email_filters"     exact element={<EmailFiltersIndex />} />
+            <Route path="/email/email_filters/:id" exact element={<EmailFiltersIndex />} />
+
+            <Route path="/email/contexts/summary"  exact element={<EmailContextsSummary />} />
+
             <Route path="/trading" element={<LayoutTrading />} >
               <Route path="" exact element={<TradingPage />} />
               <Route path={appRouter.stocksIndexRoute} exact element={<StocksIndex />} />
               <Route path="stocks/:ticker" exact element={<StocksShow />} />
             </Route>
 
-            {/* @TODO */}
             <Route path="/analytics" exact element={<AnalyticsPage />} />
-            <Route path={appRouter.emailInboxRoute} exact element={<EmailHomePage />} />
 
           </Routes>
         </div>
